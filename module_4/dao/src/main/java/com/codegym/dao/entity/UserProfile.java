@@ -35,6 +35,9 @@ public class UserProfile {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "user_rank_id")
+    private UserRank rank;
     public UserProfile() {
     }
 

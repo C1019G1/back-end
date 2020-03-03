@@ -4,6 +4,8 @@ import com.codegym.dao.entity.User;
 import com.codegym.dao.repository.UserRepository;
 import com.codegym.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +13,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
+
     @Override
-    public List<User> getAllUser() {
-        return null;
+    public Page<User> getAllUser(Pageable pageable) {
+        return (Page<User>) userRepository.findAll();
     }
 }
