@@ -27,6 +27,9 @@ public class UserProfile {
     @Column(name = "address")
     private Long address;
 
+    @Column(name = "contribute_point")
+    private int contributePoint;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "dob")
     private Date dayOfBirth;

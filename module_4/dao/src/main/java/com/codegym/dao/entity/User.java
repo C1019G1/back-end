@@ -20,6 +20,7 @@ public class User {
     private Long userInfoId;
 
     @ManyToOne
+    @JoinTable(name = "user_role")
     @JoinColumn(name = "user_role_id")
     private Role role;
 
