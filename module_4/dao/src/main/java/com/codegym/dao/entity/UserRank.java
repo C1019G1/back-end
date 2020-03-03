@@ -8,16 +8,31 @@ import java.util.List;
 public class UserRank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_rank_id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column
     private String name;
 
-    @OneToMany(targetEntity = User.class)
-    private List<UserProfile> userProfiles;
 
     public UserRank() {
 
     }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

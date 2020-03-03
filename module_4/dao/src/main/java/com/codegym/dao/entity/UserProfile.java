@@ -5,43 +5,107 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_profile")
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_profile_id")
+    @Column()
     private Long id;
 
-    @Column(name = "full_name")
+    @Column
     private String fullName;
 
-    @Column(name = "email")
+    @Column
     private String email;
 
-    @Column(name = "phone_number")
+    @Column
     private Long phone;
 
-    @Column(name = "identity_number ")
+    @Column
     private Long identityNumber;
 
-    @Column(name = "address")
-    private Long address;
+    @Column
+    private String address;
 
-    @Column(name = "contribute_point")
+    @Column
     private int contributePoint;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "dob")
+    @Column()
     private Date dayOfBirth;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @ManyToOne
     @JoinColumn(name = "user_rank_id")
     private UserRank rank;
+
     public UserProfile() {
     }
 
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
+    }
+
+    public Long getIdentityNumber() {
+        return identityNumber;
+    }
+
+    public void setIdentityNumber(Long identityNumber) {
+        this.identityNumber = identityNumber;
+    }
+
+
+    public int getContributePoint() {
+        return contributePoint;
+    }
+
+    public void setContributePoint(int contributePoint) {
+        this.contributePoint = contributePoint;
+    }
+
+    public Date getDayOfBirth() {
+        return dayOfBirth;
+    }
+
+    public void setDayOfBirth(Date dayOfBirth) {
+        this.dayOfBirth = dayOfBirth;
+    }
+
+
+    public UserRank getRank() {
+        return rank;
+    }
+
+    public void setRank(UserRank rank) {
+        this.rank = rank;
+    }
 }
