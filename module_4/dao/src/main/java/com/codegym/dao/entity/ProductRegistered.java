@@ -11,7 +11,7 @@ public class ProductRegistered {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @Column(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 
     @Column(name = "view")
