@@ -1,8 +1,7 @@
 package com.codegym.web_service.controller;
 
-import com.codegym.dao.entity.Role;
-import com.codegym.dao.entity.User;
-import com.codegym.service.UserService;
+import com.codegym.dao.entity.RegisteredProduct;
+import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +14,14 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("admin")
-public class AdminController {
+@RequestMapping("")
+public class HomeController {
     @Autowired
-    UserService userService;
+    RegisteredProductService registeredProductService;
 
-    @GetMapping("user-list")
-    public ResponseEntity<?> helloAdmin() {
-        List<User> user = userService.getAllUser();
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @GetMapping("product-list")
+    public ResponseEntity<?> getDashBroad() {
+        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProduct();
+        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
     }
-
 }
