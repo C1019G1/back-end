@@ -18,7 +18,7 @@ public class UserProfile {
     private String email;
 
     @Column
-    private Long phone;
+    private int phone;
 
     @Column
     private Long identityNumber;
@@ -41,7 +41,24 @@ public class UserProfile {
     public UserProfile() {
     }
 
+    public UserProfile(String fullName, String email, int phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.identityNumber = identityNumber;
+        this.address = address;
+        this.contributePoint = contributePoint;
+        this.dayOfBirth = dayOfBirth;
+        this.rank = rank;
+    }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public Long getId() {
         return id;
@@ -67,11 +84,11 @@ public class UserProfile {
         this.email = email;
     }
 
-    public Long getPhone() {
+    public int getPhone() {
         return phone;
     }
 
-    public void setPhone(Long phone) {
+    public void setPhone(int phone) {
         this.phone = phone;
     }
 
