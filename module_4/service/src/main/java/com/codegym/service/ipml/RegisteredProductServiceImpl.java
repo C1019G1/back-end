@@ -29,7 +29,6 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
         List<RegisteredProductDTO> registeredProductDTOS =new ArrayList<RegisteredProductDTO>();
         for (RegisteredProduct registeredProduct:registeredProducts1){
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
-
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
             registeredProductDTO.setId(registeredProduct.getId());
             registeredProductDTO.setCurrent_price(registeredProduct.getCurrentPrice());
@@ -63,34 +62,8 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
 
     @Override
     public List<RegisteredProduct> getAllRegisteredProductByName(String name) {
-//        registeredProductRepository.findRegisteredProductByProduct_Name(name);
-        return null;
+        return registeredProductRepository.findByProductNameContaining(name);
     }
 
-//    @Override
-//    public Page<RegisteredProduct> getAllRegisteredProductEndDay(Pageable pageable) {
-//        return registeredProductRepository.getAllByProductEndDay(pageable);
-//    }
-//    @Override
-//    public Page<RegisteredProductDTO> getAllRegisteredProductEndDay(Pageable pageable) {
-//        Page<RegisteredProduct> registeredProducts =registeredProductRepository.getAllByProductEndDay(pageable);
-//        Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
-//            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
-//            registeredProductDTO.setProduct_id(registeredProduct.getProduct().getId());
-//            registeredProductDTO.setName_product(registeredProduct.getProduct().getName());
-//            registeredProductDTO.setContract_address(registeredProduct.getProduct().getContractAddress());
-//            registeredProductDTO.setContract_phone_number(registeredProduct.getProduct().getContractPhoneNumber());
-//            registeredProductDTO.setCurrent_price(registeredProduct.getCurrentPrice());
-//            registeredProductDTO.setEnd_day(registeredProduct.getProduct().getEndDay());
-//            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
-//            registeredProductDTO.setMin_bet(registeredProduct.getProduct().getMinBet());
-//            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
-//            registeredProductDTO.setProduct_info(registeredProduct.getProduct().getProductInfo());
-//            registeredProductDTO.setProduct_register_id(registeredProduct.getId());
-//            registeredProductDTO.setStart_day(registeredProduct.getProduct().getStartDay());
-//            registeredProductDTO.setStart_price(registeredProduct.getProduct().getStartPrice());
-//            return registeredProductDTO;
-//        });
-//        return registeredProductDTOS;
-//    }
+//
 }

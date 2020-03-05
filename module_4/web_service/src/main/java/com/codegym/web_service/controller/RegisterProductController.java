@@ -32,10 +32,11 @@ public class RegisterProductController {
         System.out.println(registeredProductDetailDTO);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
-//    @GetMapping("/{name}")
-//    public ResponseEntity<?> getAllRegisteredProductByName(@PathVariable String name) {
-//        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByName(name);
-//        System.out.println(registeredProducts);
-//        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/search", params = {"phone"})
+    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("phone") String phone) {
+        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByName(phone);
+        System.out.println(phone);
+        System.out.println(registeredProducts);
+        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
+    }
 }

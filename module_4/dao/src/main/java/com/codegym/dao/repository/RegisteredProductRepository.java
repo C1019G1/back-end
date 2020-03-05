@@ -18,4 +18,11 @@ public interface RegisteredProductRepository extends PagingAndSortingRepository<
 //            "\tINNER JOIN product p ON rp.product_id = p.id\n" +
 //            "WHERE TIMESTAMPDIFF(SECOND, NOW(), p.end_day) >= 0;", nativeQuery = true)
 //    Page<RegisteredProduct> getAllByProductEndDay(Pageable pageable);
+//    @Query(value = "SELECT p.name \n" +
+//            "FROM registered_product rp \n" +
+//            "\tINNER JOIN product p ON rp.product_id = p.id \n" +
+//            "WHERE p.name LIKE '%ph%n';",nativeQuery = true)
+    List<RegisteredProduct> findByProductNameContaining(String name);
+    List<RegisteredProduct> findAllByProductContractPhoneNumber(String name);
+    List<RegisteredProduct> findAllByProductContractAddress(String name);
 }
