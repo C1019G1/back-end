@@ -59,7 +59,6 @@ public class UserProfile {
     public void setAddress(String address) {
         this.address = address;
     }
-
     public Long getId() {
         return id;
     }
@@ -100,6 +99,13 @@ public class UserProfile {
         this.identityNumber = identityNumber;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public int getContributePoint() {
         return contributePoint;
@@ -116,7 +122,6 @@ public class UserProfile {
     public void setDayOfBirth(Date dayOfBirth) {
         this.dayOfBirth = dayOfBirth;
     }
-
 
     public UserRank getRank() {
         return rank;
