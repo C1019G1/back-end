@@ -12,5 +12,7 @@ public interface RegisteredProductService {
     List<RegisteredProductDTO> getAllRegisteredProductEndDay();
     RegisteredProductDetailDTO getByIdRegisterProduct(Long id);
 
-    List<RegisteredProduct> getAllRegisteredProductByName(String name);
+    List<RegisteredProduct> getAllRegisteredProductByNameContaining(String name);
+
+    List<RegisteredProduct> getAllRegisteredProductByNamePriceCatalogue(String name, Long price, String catalogue);
 }

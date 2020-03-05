@@ -23,6 +23,7 @@ public interface RegisteredProductRepository extends PagingAndSortingRepository<
 //            "\tINNER JOIN product p ON rp.product_id = p.id \n" +
 //            "WHERE p.name LIKE '%ph%n';",nativeQuery = true)
     List<RegisteredProduct> findByProductNameContaining(String name);
+    List<RegisteredProduct> findAllByProductProductCatalogueName(String name);
     List<RegisteredProduct> findAllByProductContractPhoneNumber(String name);
-    List<RegisteredProduct> findAllByProductContractAddress(String name);
+    List<RegisteredProduct> findAllByProductNameContainingAndProductStartPriceAndProductProductCatalogueName(String name,Long price, String catalogue);
 }

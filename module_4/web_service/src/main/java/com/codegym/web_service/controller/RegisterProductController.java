@@ -5,13 +5,10 @@ import com.codegym.dao.DTO.RegisteredProductDetailDTO;
 import com.codegym.dao.entity.RegisteredProduct;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Max;
 import java.util.List;
 
 @RestController
@@ -32,11 +29,16 @@ public class RegisterProductController {
         System.out.println(registeredProductDetailDTO);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
-    @GetMapping(value = "/search", params = {"phone"})
-    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("phone") String phone) {
-        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByName(phone);
-        System.out.println(phone);
-        System.out.println(registeredProducts);
+    @GetMapping(value = "/search", params = {"name"})
+    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("name") String name) {
+        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByNameContaining(name);
+        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
+    }
+    @GetMapping(value = "/search", params = {"name","price","catalogue"})
+    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("name") String name,
+                                                            @RequestParam ("price") Long price,
+                                                           @RequestParam ("catalogue") String catalogue) {
+        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(name,price,catalogue);
         return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
     }
 }

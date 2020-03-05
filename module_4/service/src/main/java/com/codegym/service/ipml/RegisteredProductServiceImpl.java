@@ -61,8 +61,13 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     }
 
     @Override
-    public List<RegisteredProduct> getAllRegisteredProductByName(String name) {
+    public List<RegisteredProduct> getAllRegisteredProductByNameContaining(String name) {
         return registeredProductRepository.findByProductNameContaining(name);
+    }
+
+    @Override
+    public List<RegisteredProduct> getAllRegisteredProductByNamePriceCatalogue(String name, Long price, String catalogue) {
+        return null;
     }
 
 //
