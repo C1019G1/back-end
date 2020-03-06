@@ -43,30 +43,14 @@ public class UserServiceImpl implements UserDetailsService {
         return (List<User>) userRepository.findAll();
     }
 
-
     public void save(User user) {
         userRepository.save(user);
     }
 
-
-    public Page<AdminUserProfileDTO> getUserProfileAdmin(Pageable pageable) {
-        Page<User> users =  getAllUser(pageable);
-        Page<AdminUserProfileDTO> userProfileDTOS = users.map(user -> {
-            AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
-            userProfileDTO.setId(user.getId());
-            userProfileDTO.setAddress(user.getUserProfile().getAddress());
-            userProfileDTO.setFullName(user.getUserProfile().getFullName());
-            userProfileDTO.setEmail(user.getUserProfile().getEmail());
-            userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
-            userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
-            userProfileDTO.setRank(user.getUserProfile().getRank().getName());
-            userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-            userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
-            return userProfileDTO;
-        });
-        return userProfileDTOS;
+    public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable,String name, String rankName) {
+        Page<User> users =  userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable,name,rankName);
+        return getAdminUserProfileDTOS(users);
     }
-
     @Override
     @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -91,4 +75,19 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.save(newUser);
     }
 
+    private Page<AdminUserProfileDTO> getAdminUserProfileDTOS(Page<User> users) {
+        return users.map(user -> {
+            AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
+            userProfileDTO.setId(user.getId());
+            userProfileDTO.setAddress(user.getUserProfile().getAddress());
+            userProfileDTO.setFullName(user.getUserProfile().getFullName());
+            userProfileDTO.setEmail(user.getUserProfile().getEmail());
+            userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
+            userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
+            userProfileDTO.setRank(user.getUserProfile().getRank().getName());
+            userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
+            userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
+            return userProfileDTO;
+        });
+    }
 }
