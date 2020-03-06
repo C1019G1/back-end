@@ -6,6 +6,8 @@ import com.codegym.dao.entity.RegisteredProduct;
 import com.codegym.dao.repository.RegisteredProductRepository;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,13 +63,41 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     }
 
     @Override
-    public List<RegisteredProduct> getAllRegisteredProductByNameContaining(String name) {
-        return registeredProductRepository.findByProductNameContaining(name);
+    public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable, Date nowDay) {
+        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductEndDayGreaterThan(pageable,nowDay);
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
+            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
+            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
+            registeredProductDTO.setId(registeredProduct.getId());
+            registeredProductDTO.setCurrent_price(registeredProduct.getCurrentPrice());
+            registeredProductDTO.setEnd_day(registeredProduct.getProduct().getEndDay());
+            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
+            registeredProductDTO.setName_product(registeredProduct.getProduct().getName());
+            return registeredProductDTO;
+        });
+        return registeredProductDTOS;
     }
 
     @Override
-    public List<RegisteredProduct> getAllRegisteredProductByNamePriceCatalogue(String name, Long price, String catalogue) {
-        return null;
+    public Page<RegisteredProductDTO> getAllRegisteredProductByNamePriceCatalogue(Pageable pageable, String name, Long price1,Long price2, String catalogue, Date nowDay) {
+
+        Page<RegisteredProduct> registeredProducts =registeredProductRepository.findAllByProductNameContainingAndProductStartPriceBetweenAndProductProductCatalogueNameAndProductEndDayGreaterThan(pageable,name, price1,price2, catalogue,nowDay);
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
+            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
+            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
+            registeredProductDTO.setId(registeredProduct.getId());
+            registeredProductDTO.setCurrent_price(registeredProduct.getCurrentPrice());
+            registeredProductDTO.setEnd_day(registeredProduct.getProduct().getEndDay());
+            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
+            registeredProductDTO.setName_product(registeredProduct.getProduct().getName());
+            return registeredProductDTO;
+        });
+        return registeredProductDTOS;
+    }
+
+    @Override
+    public List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2) {
+        return registeredProductRepository.findAllByProductStartPriceBetween(number1,number2);
     }
 
 //

@@ -9,21 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface RegisteredProductRepository extends PagingAndSortingRepository<RegisteredProduct,Long> {
-//    @Query(value = "SELECT *\n" +
-//            "FROM registered_product rp\n" +
-//            "\tINNER JOIN product p ON rp.product_id = p.id\n" +
-//            "WHERE TIMESTAMPDIFF(SECOND, NOW(), p.end_day) >= 0;", nativeQuery = true)
-//    Page<RegisteredProduct> getAllByProductEndDay(Pageable pageable);
-//    @Query(value = "SELECT p.name \n" +
-//            "FROM registered_product rp \n" +
-//            "\tINNER JOIN product p ON rp.product_id = p.id \n" +
-//            "WHERE p.name LIKE '%ph%n';",nativeQuery = true)
     List<RegisteredProduct> findByProductNameContaining(String name);
-    List<RegisteredProduct> findAllByProductProductCatalogueName(String name);
+    Page<RegisteredProduct> findAllByProductEndDayGreaterThan(Pageable pageable,Date nowDay);
     List<RegisteredProduct> findAllByProductContractPhoneNumber(String name);
-    List<RegisteredProduct> findAllByProductNameContainingAndProductStartPriceAndProductProductCatalogueName(String name,Long price, String catalogue);
+    Page<RegisteredProduct> findAllByProductNameContainingAndProductStartPriceBetweenAndProductProductCatalogueNameAndProductEndDayGreaterThan(Pageable pageable,String name,Long price1,Long price2, String catalogue, Date nowDay);
+    List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2);
 }
