@@ -6,6 +6,7 @@ import com.codegym.dao.entity.RegisteredProduct;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,10 @@ public class RegisterProductController {
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
     @GetMapping("/page")
-    public ResponseEntity<?> getAllRegisteredProduct1(Pageable pageable) {
+    public ResponseEntity<?> getAllRegisteredProduct1(@RequestParam("page") int page,
+                                                      @RequestParam("size") int size) {
         Date nowDay =new Date();
-        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProduct(pageable ,nowDay);
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProduct(PageRequest.of(page, size) ,nowDay);
         return new ResponseEntity<>(registeredProductDTOS, HttpStatus.OK);
     }
     @GetMapping(value = "/search", params = {"name","price1","price2","catalogue"})
