@@ -24,11 +24,13 @@ public class AdminController {
     UserRankService userRankService;
 
     @GetMapping("user-list")
-    public ResponseEntity<?> getUserList(@RequestParam("page") int page,
-                                         @RequestParam("size") int size,
-                                         @RequestParam("search") String search) {
+    public ResponseEntity<?> getUserList(@RequestParam(name = "page") int page,
+                                         @RequestParam(name = "size") int size,
+                                         @RequestParam(name = "name", defaultValue = "") String name,
+                                         @RequestParam(name = "rank", defaultValue = "") String rank
+                                         ) {
         Page<AdminUserProfileDTO> adminUserProfileDTOS;
-        adminUserProfileDTOS= userService.getUserProfileAdmin(PageRequest.of(page, size));
+        adminUserProfileDTOS= userService.getUsersProfileByNameByRank(PageRequest.of(page, size),name,rank);
         return new ResponseEntity<>(adminUserProfileDTOS, HttpStatus.OK);
     }
     @GetMapping("rank-list")
