@@ -55,9 +55,6 @@ public class TestController {
         String jwtToken=jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok( new JwtResponse(jwtToken));
     }
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-        return ResponseEntity.ok(userService.save(user));
-    }
+
 }
 

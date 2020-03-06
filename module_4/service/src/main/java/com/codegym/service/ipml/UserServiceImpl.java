@@ -44,11 +44,6 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
 
-    public void save(User user) {
-        userRepository.save(user);
-    }
-
-
     public Page<AdminUserProfileDTO> getUserProfileAdmin(Pageable pageable) {
         Page<User> users =  getAllUser(pageable);
         Page<AdminUserProfileDTO> userProfileDTOS = users.map(user -> {
@@ -83,12 +78,8 @@ public class UserServiceImpl implements UserDetailsService {
                 grantedAuthorities);
     }
 
-    public User save(UserDTO user) {
-        User newUser = new User();
-        newUser.setUserName(user.getUsername());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-
-        return userRepository.save(newUser);
+    public User save(User user) {
+        user.setPassword(bcryptEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
-
 }

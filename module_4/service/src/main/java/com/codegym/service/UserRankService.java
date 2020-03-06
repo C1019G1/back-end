@@ -7,4 +7,5 @@ import java.lang.reflect.Array;
 
 public interface UserRankService {
     Iterable<UserRank> getAllRank();
+    UserRank getById(Long id);
 }
