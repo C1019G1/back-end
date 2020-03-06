@@ -5,10 +5,14 @@ import com.codegym.dao.DTO.RegisteredProductDetailDTO;
 import com.codegym.dao.entity.RegisteredProduct;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,16 +33,27 @@ public class RegisterProductController {
         System.out.println(registeredProductDetailDTO);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
-    @GetMapping(value = "/search", params = {"name"})
-    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("name") String name) {
-        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByNameContaining(name);
-        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
+    @GetMapping("/page")
+    public ResponseEntity<?> getAllRegisteredProduct1(@RequestParam("page") int page,
+                                                      @RequestParam("size") int size) {
+        Date nowDay =new Date();
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProduct(PageRequest.of(page, size) ,nowDay);
+        return new ResponseEntity<>(registeredProductDTOS, HttpStatus.OK);
     }
-    @GetMapping(value = "/search", params = {"name","price","catalogue"})
-    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("name") String name,
-                                                            @RequestParam ("price") Long price,
+    @GetMapping(value = "/search", params = {"name","price1","price2","catalogue"})
+    public ResponseEntity<?> getAllRegisteredProductByName(Pageable pageable,@RequestParam ("name") String name,
+                                                           @RequestParam ("price1") Long price1,
+                                                           @RequestParam ("price2") Long price2,
                                                            @RequestParam ("catalogue") String catalogue) {
-        List<RegisteredProduct> registeredProducts = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(name,price,catalogue);
+        Date nowDay =new Date();
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(pageable,name,price1,price2,catalogue,nowDay);
+        return new ResponseEntity<>(registeredProductDTOS, HttpStatus.OK);
+    }
+    @GetMapping(value = "/search", params = {"price1","price2"})
+    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("price1") Long price1,
+                                                           @RequestParam ("price2") Long price2)
+                                                            {
+        List<RegisteredProduct> registeredProducts = registeredProductService.findAllByProductStartPriceBetween(price1,price2);
         return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
     }
 }
