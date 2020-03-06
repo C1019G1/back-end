@@ -1,6 +1,7 @@
 package com.codegym.dao.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -8,15 +9,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column()
+    @Column(unique = true)
     private String userName;
 
     @Column()
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     @OneToOne
     @JoinColumn(name = "user_profile_id")
@@ -25,10 +30,17 @@ public class User {
     public User() {
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public User(String userName, String password, Role role, UserProfile userProfile) {
         this.userName = userName;
         this.password = password;
-        this.role = role;
         this.userProfile = userProfile;
     }
 
@@ -56,13 +68,6 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public UserProfile getUserProfile() {
         return userProfile;

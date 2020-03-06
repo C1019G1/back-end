@@ -1,22 +1,28 @@
 package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
 import com.codegym.dao.repository.UserRepository;
 import com.codegym.service.UserLockListService;
 import com.codegym.service.UserLoginHistoryService;
-import com.codegym.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -24,22 +30,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserLoginHistoryService loginHistoryService;
 
-    @Override
     public Page<User> getAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
-    @Override
+
     public List<User> getAllUser() {
         return (List<User>) userRepository.findAll();
     }
 
-    @Override
+
     public void save(User user) {
         userRepository.save(user);
     }
 
-    @Override
+
     public Page<AdminUserProfileDTO> getUserProfileAdmin(Pageable pageable) {
         Page<User> users =  getAllUser(pageable);
         Page<AdminUserProfileDTO> userProfileDTOS = users.map(user -> {
@@ -57,4 +62,28 @@ public class UserServiceImpl implements UserService {
         });
         return userProfileDTOS;
     }
+
+    @Override
+    @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        Set<Role> roles = user.getRoles();
+        for(Role role: roles){
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
+                grantedAuthorities);
+    }
+
+//    public User save(UserDTO user) {
+//        User newUser = new User();
+//        newUser.setUserName(user.getUsername());
+//        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+//        return userRepository.save(newUser);
+//    }
+
 }
