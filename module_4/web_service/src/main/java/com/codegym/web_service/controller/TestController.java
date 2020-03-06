@@ -23,7 +23,8 @@ public class TestController {
     JwtTokenUtil jwtTokenUtil;
     @Autowired(required = false)
     UserServiceImpl userServiceImpl;
-
+    @Autowired
+    private UserServiceImpl userService;
     private UserDTO userDTO;
     @GetMapping("/admin")
     public ResponseEntity<?> helloAdmin() {
@@ -49,13 +50,14 @@ public class TestController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword())
         );
-        System.out.println("co hay khong");
         UserDetails userDetails = userServiceImpl
                 .loadUserByUsername(authentication.getName());
-        System.out.println("co hay khong");
         String jwtToken=jwtTokenUtil.generateToken(userDetails);
-        System.out.println("co hay khong");
         return ResponseEntity.ok( new JwtResponse(jwtToken));
+    }
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
+        return ResponseEntity.ok(userService.save(user));
     }
 }
 

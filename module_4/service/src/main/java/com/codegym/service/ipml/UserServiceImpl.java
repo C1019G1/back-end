@@ -1,6 +1,7 @@
 package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.DTO.UserDTO;
 import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
 import com.codegym.dao.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,8 @@ public class UserServiceImpl implements UserDetailsService {
     UserLockListService lockListService;
     @Autowired
     UserLoginHistoryService loginHistoryService;
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     public Page<User> getAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
@@ -79,11 +83,12 @@ public class UserServiceImpl implements UserDetailsService {
                 grantedAuthorities);
     }
 
-//    public User save(UserDTO user) {
-//        User newUser = new User();
-//        newUser.setUserName(user.getUsername());
-//        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-//        return userRepository.save(newUser);
-//    }
+    public User save(UserDTO user) {
+        User newUser = new User();
+        newUser.setUserName(user.getUsername());
+        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+
+        return userRepository.save(newUser);
+    }
 
 }
