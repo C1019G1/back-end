@@ -16,4 +16,16 @@ public class UserProfileImpl implements UserProfileService {
     public UserProfile findAllProfileUser(Long id) {
         return userProfileRepository.getUserProfileById(id);
     }
+
+    @Override
+    public UserProfile findById(Long id) {
+        return userProfileRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void editUserProfile(UserProfile userProfile) {
+        userProfileRepository.save(userProfile);
+    }
 }
+
+
