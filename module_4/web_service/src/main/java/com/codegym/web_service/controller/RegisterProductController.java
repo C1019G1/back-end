@@ -34,14 +34,15 @@ public class RegisterProductController {
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
     @GetMapping("list")
-    public ResponseEntity<?> getAllRegisteredProduct1(@RequestParam("page") int page,
-                                                      @RequestParam("size") int size) {
+    public ResponseEntity<?> getAllRegisteredProduct(@RequestParam("page") int page,
+                                                      @RequestParam("size") int size,
+                                                      @RequestParam("catalogue") String catalogue) {
         Date nowDay =new Date();
-        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProduct(PageRequest.of(page, size) ,nowDay);
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProduct(PageRequest.of(page, size),catalogue ,nowDay);
         return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
     }
     @GetMapping(value = "/search", params = {"page","size","name","price1","price2","catalogue"})
-    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam("page") int page,
+    public ResponseEntity<?> getAllRegisteredProductByNamePriceCatalogue(@RequestParam("page") int page,
                                                            @RequestParam("size") int size,
                                                            @RequestParam ("name") String name,
                                                            @RequestParam ("price1") Long price1,
@@ -51,11 +52,13 @@ public class RegisterProductController {
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(PageRequest.of(page, size),name,price1,price2,catalogue,nowDay);
         return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
     }
-//    @GetMapping(value = "/search", params = {"price1","price2"})
-//    public ResponseEntity<?> getAllRegisteredProductByName(@RequestParam ("price1") Long price1,
-//                                                           @RequestParam ("price2") Long price2)
-//                                                            {
-//        List<RegisteredProduct> registeredProducts = registeredProductService.findAllByProductStartPriceBetween(price1,price2);
-//        return new ResponseEntity<>(registeredProducts, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/search", params = {"catalogue"})
+    public ResponseEntity<?> getAllRegisteredProductByCatalogue(@RequestParam ("catalogue") String catalogue,
+                                                           @RequestParam("page") int page,
+                                                           @RequestParam("size") int size)
+                                                            {
+        Date nowDay =new Date();
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByCatalogue(PageRequest.of(page, size) ,catalogue, nowDay);
+        return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
+    }
 }

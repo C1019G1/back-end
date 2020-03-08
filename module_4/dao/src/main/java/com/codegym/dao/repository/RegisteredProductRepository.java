@@ -19,4 +19,5 @@ public interface RegisteredProductRepository extends PagingAndSortingRepository<
     List<RegisteredProduct> findAllByProductContractPhoneNumber(String name);
     Page<RegisteredProduct> findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable,String name,Long price1,Long price2, String catalogue, Date nowDay);
     List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2);
+    Page<RegisteredProduct> findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable, String catalogue, Date nowDay);
 }
