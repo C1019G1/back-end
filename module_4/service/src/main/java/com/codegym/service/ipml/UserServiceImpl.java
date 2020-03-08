@@ -82,4 +82,8 @@ public class UserServiceImpl implements UserDetailsService {
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
+    public User findByUserName(String username) {
+        return userRepository.findByUserName(username);
+    }
 }
