@@ -81,7 +81,7 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     @Override
     public Page<RegisteredProductDTO> getAllRegisteredProductByNamePriceCatalogue(Pageable pageable, String name, Long price1,Long price2, String catalogue, Date nowDay) {
 
-        Page<RegisteredProduct> registeredProducts =registeredProductRepository.findAllByProductNameContainingAndProductStartPriceBetweenAndProductProductCatalogueNameAndProductEndDayGreaterThan(pageable,name, price1,price2, catalogue,nowDay);
+        Page<RegisteredProduct> registeredProducts =registeredProductRepository.findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable,name, price1,price2, catalogue,nowDay);
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
