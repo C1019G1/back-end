@@ -1,6 +1,7 @@
 package com.codegym.dao.DTO;
 
 import java.util.Date;
+import java.util.List;
 
 public class RegisteredProductDetailDTO {
     private Long id;
@@ -16,11 +17,14 @@ public class RegisteredProductDetailDTO {
     private Date start_day;
     private Long start_price;
     private String product_info;
+    private List<String> userList;
+    private List<Long> betPriceList;
+    private List<Date> betTimeList;
 
     public RegisteredProductDetailDTO() {
     }
 
-    public RegisteredProductDetailDTO(Long id, String name_product, Long current_price, Date end_day, String img, String catalogue, Long min_bet, Long product_id, String contract_address, String contract_phone_number, Date start_day, Long start_price, String product_info) {
+    public RegisteredProductDetailDTO(Long id, String name_product, Long current_price, Date end_day, String img, String catalogue, Long min_bet, Long product_id, String contract_address, String contract_phone_number, Date start_day, Long start_price, String product_info, List<String> userList, List<Long> betPriceList, List<Date> betTimeList) {
         this.id = id;
         this.name_product = name_product;
         this.current_price = current_price;
@@ -34,31 +38,41 @@ public class RegisteredProductDetailDTO {
         this.start_day = start_day;
         this.start_price = start_price;
         this.product_info = product_info;
-
+        this.userList = userList;
+        this.betPriceList = betPriceList;
+        this.betTimeList = betTimeList;
     }
 
-    public Date getStart_day() {
-        return start_day;
+    public Long getId() {
+        return id;
     }
 
-    public void setStart_day(Date start_day) {
-        this.start_day = start_day;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getStart_price() {
-        return start_price;
+    public String getName_product() {
+        return name_product;
     }
 
-    public void setStart_price(Long start_price) {
-        this.start_price = start_price;
+    public void setName_product(String name_product) {
+        this.name_product = name_product;
     }
 
-    public String getProduct_info() {
-        return product_info;
+    public Long getCurrent_price() {
+        return current_price;
     }
 
-    public void setProduct_info(String product_info) {
-        this.product_info = product_info;
+    public void setCurrent_price(Long current_price) {
+        this.current_price = current_price;
+    }
+
+    public Date getEnd_day() {
+        return end_day;
+    }
+
+    public void setEnd_day(Date end_day) {
+        this.end_day = end_day;
     }
 
     public String getImg() {
@@ -109,35 +123,51 @@ public class RegisteredProductDetailDTO {
         this.contract_phone_number = contract_phone_number;
     }
 
-    public Long getId() {
-        return id;
+    public Date getStart_day() {
+        return start_day;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setStart_day(Date start_day) {
+        this.start_day = start_day;
     }
 
-    public String getName_product() {
-        return name_product;
+    public Long getStart_price() {
+        return start_price;
     }
 
-    public void setName_product(String name_product) {
-        this.name_product = name_product;
+    public void setStart_price(Long start_price) {
+        this.start_price = start_price;
     }
 
-    public Long getCurrent_price() {
-        return current_price;
+    public String getProduct_info() {
+        return product_info;
     }
 
-    public void setCurrent_price(Long current_price) {
-        this.current_price = current_price;
+    public void setProduct_info(String product_info) {
+        this.product_info = product_info;
     }
 
-    public Date getEnd_day() {
-        return end_day;
+    public List<String> getUserList() {
+        return userList;
     }
 
-    public void setEnd_day(Date end_day) {
-        this.end_day = end_day;
+    public void setUserList(List<String> userList) {
+        this.userList = userList;
+    }
+
+    public List<Long> getBetPriceList() {
+        return betPriceList;
+    }
+
+    public void setBetPriceList(List<Long> betPriceList) {
+        this.betPriceList = betPriceList;
+    }
+
+    public List<Date> getBetTimeList() {
+        return betTimeList;
+    }
+
+    public void setBetTimeList(List<Date> betTimeList) {
+        this.betTimeList = betTimeList;
     }
 }
