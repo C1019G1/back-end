@@ -19,9 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -34,35 +32,35 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
-    public Page<User> getAllUser(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public AdminUserProfileDTO getUserProfileDTOByEmail(String email) {
+        User user = this.userRepository.findByUserProfile_Email(email).orElse(null);
+        if (user != null) {
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
     }
 
-
-    public List<User> getAllUser() {
-        return (List<User>) userRepository.findAll();
+    public AdminUserProfileDTO getUserProfileDTOById(Long id) {
+        User user = this.userRepository.findById(id).orElse(null);
+        if (user != null) {
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
     }
 
-    public Page<AdminUserProfileDTO> getUserProfileAdmin(Pageable pageable) {
-        Page<User> users =  getAllUser(pageable);
-        Page<AdminUserProfileDTO> userProfileDTOS = users.map(user -> {
-            AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
-            userProfileDTO.setId(user.getId());
-            userProfileDTO.setAddress(user.getUserProfile().getAddress());
-            userProfileDTO.setFullName(user.getUserProfile().getFullName());
-            userProfileDTO.setEmail(user.getUserProfile().getEmail());
-            userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
-            userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
-            userProfileDTO.setRank(user.getUserProfile().getRank().getName());
-            userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-            userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
-            return userProfileDTO;
-        });
-        return userProfileDTOS;
-    public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable,String name, String rankName) {
-        Page<User> users =  userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable,name,rankName);
-        return getAdminUserProfileDTOS(users);
+    public AdminUserProfileDTO getUserProfileDTOByIdAndEmail(Long id, String email) {
+        User user = this.userRepository.findByIdAndUserProfile_Email(id, email).orElse(null);
+        if (user != null) {
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
     }
+
+    public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable, String name, String rankName) {
+        Page<User> users = userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable, name, rankName);
+        return getUserProfileDTOS(users);
+    }
+
     @Override
     @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,7 +70,7 @@ public class UserServiceImpl implements UserDetailsService {
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         Set<Role> roles = user.getRoles();
-        for(Role role: roles){
+        for (Role role : roles) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
@@ -84,23 +82,25 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.save(user);
     }
 
-
     public User findByUserName(String username) {
         return userRepository.findByUserName(username);
+    }
 
-    private Page<AdminUserProfileDTO> getAdminUserProfileDTOS(Page<User> users) {
-        return users.map(user -> {
-            AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
-            userProfileDTO.setId(user.getId());
-            userProfileDTO.setAddress(user.getUserProfile().getAddress());
-            userProfileDTO.setFullName(user.getUserProfile().getFullName());
-            userProfileDTO.setEmail(user.getUserProfile().getEmail());
-            userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
-            userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
-            userProfileDTO.setRank(user.getUserProfile().getRank().getName());
-            userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-            userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
-            return userProfileDTO;
-        });
+    private Page<AdminUserProfileDTO> getUserProfileDTOS(Page<User> users) {
+        return users.map(this::getAdminUserProfileDTO);
+    }
+
+    private AdminUserProfileDTO getAdminUserProfileDTO(User user) {
+        AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
+        userProfileDTO.setId(user.getId());
+        userProfileDTO.setAddress(user.getUserProfile().getAddress());
+        userProfileDTO.setFullName(user.getUserProfile().getFullName());
+        userProfileDTO.setEmail(user.getUserProfile().getEmail());
+        userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
+        userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
+        userProfileDTO.setRank(user.getUserProfile().getRank().getName());
+        userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
+        userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
+        return userProfileDTO;
     }
 }
