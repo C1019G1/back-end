@@ -22,5 +22,10 @@ public class UserProfileImpl implements UserProfileService {
         return userProfileRepository.save(userProfile);
     }
 
+    @Override
+    public UserProfile getUserProfileByEmail(String email) {
+        return userProfileRepository.getUserProfileByEmail(email);
+    }
+
 
 }
