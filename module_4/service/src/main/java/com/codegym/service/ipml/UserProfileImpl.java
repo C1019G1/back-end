@@ -16,4 +16,11 @@ public class UserProfileImpl implements UserProfileService {
     public UserProfile findAllProfileUser(Long id) {
         return userProfileRepository.getUserProfileById(id);
     }
+
+    @Override
+    public UserProfile save(UserProfile userProfile) {
+        return userProfileRepository.save(userProfile);
+    }
+
+
 }
