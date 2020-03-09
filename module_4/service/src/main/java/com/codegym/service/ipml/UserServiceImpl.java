@@ -35,14 +35,8 @@ public class UserServiceImpl implements UserDetailsService {
     public Page<User> getAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
-
-
     public List<User> getAllUser() {
         return (List<User>) userRepository.findAll();
-    }
-
-    public void save(User user) {
-        userRepository.save(user);
     }
     public AdminUserProfileDTO getUserProfileDTOByEmail(String email){
         User user= this.userRepository.findByUserProfile_Email(email).orElse(null);
@@ -85,13 +79,15 @@ public class UserServiceImpl implements UserDetailsService {
                 grantedAuthorities);
     }
 
-    public User save(UserDTO user) {
-        User newUser = new User();
-        newUser.setUserName(user.getUsername());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-        return userRepository.save(newUser);
+    public User save(User user) {
+        user.setPassword(bcryptEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
+
+    public User findByUserName(String username) {
+        return userRepository.findByUserName(username);
+    }
     private Page<AdminUserProfileDTO> getUserProfileDTOS(Page<User> users) {
         return users.map(this::getAdminUserProfileDTO);
     }
@@ -109,5 +105,4 @@ public class UserServiceImpl implements UserDetailsService {
         userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
         return userProfileDTO;
     }
-
 }
