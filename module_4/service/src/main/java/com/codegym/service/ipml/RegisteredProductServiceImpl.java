@@ -7,6 +7,7 @@ import com.codegym.dao.repository.RegisteredProductRepository;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -63,8 +64,8 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     }
 
     @Override
-    public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable, Date nowDay) {
-        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductEndDayGreaterThan(pageable,nowDay);
+    public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable,String catalogue, Date nowDay) {
+        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, catalogue, nowDay);
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
@@ -98,6 +99,22 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     @Override
     public List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2) {
         return registeredProductRepository.findAllByProductStartPriceBetween(number1,number2);
+    }
+
+    @Override
+    public Page<RegisteredProductDTO> getAllRegisteredProductByCatalogue(Pageable pageable, String catalogue, Date nowDay) {
+        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, catalogue , nowDay);
+        Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
+            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
+            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
+            registeredProductDTO.setId(registeredProduct.getId());
+            registeredProductDTO.setCurrent_price(registeredProduct.getCurrentPrice());
+            registeredProductDTO.setEnd_day(registeredProduct.getProduct().getEndDay());
+            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
+            registeredProductDTO.setName_product(registeredProduct.getProduct().getName());
+            return registeredProductDTO;
+        });
+        return registeredProductDTOS;
     }
 
 //
