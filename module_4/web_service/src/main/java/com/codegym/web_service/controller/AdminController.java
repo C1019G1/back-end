@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -24,22 +22,40 @@ public class AdminController {
     UserRankService userRankService;
 
     @GetMapping("user-list")
-    public ResponseEntity<?> getUserList(@RequestParam(name = "page") int page,
+    public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
                                          @RequestParam(name = "size") int size,
                                          @RequestParam(name = "name", defaultValue = "") String name,
                                          @RequestParam(name = "rank", defaultValue = "") String rank
-                                         ) {
+    ) {
         Page<AdminUserProfileDTO> adminUserProfileDTOS;
-        adminUserProfileDTOS= userService.getUsersProfileByNameByRank(PageRequest.of(page, size),name,rank);
-        return new ResponseEntity<>(adminUserProfileDTOS, HttpStatus.OK);
+        adminUserProfileDTOS = userService.getUsersProfileByNameByRank(PageRequest.of(page, size), name, rank);
+        return new ResponseEntity(adminUserProfileDTOS, HttpStatus.OK);
     }
-    @GetMapping("rank-list")
-    public ResponseEntity<?> getRankList(){
-        List rankList = new ArrayList();
-        Iterable<UserRank> userRankList =  userRankService.getAllRank();
-        for (UserRank userRank:userRankList) {
-            rankList.add(userRank.getName());
+
+    @GetMapping("find")
+    public ResponseEntity<AdminUserProfileDTO> searchUser(@RequestParam(name = "id", defaultValue = "") Long id,
+                                        @RequestParam(name = "email", defaultValue = "") String email) {
+        AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
+        if (id != null && !email.equals("")) {
+            userProfileDTO = userService.getUserProfileDTOByIdAndEmail(id, email);
+        } else {
+            if (id != null) {
+                userProfileDTO = userService.getUserProfileDTOById(id);
+            } else {
+                if (!email.equals("")) {
+                    userProfileDTO = userService.getUserProfileDTOByEmail(email);
+                }
+            }
         }
-        return new ResponseEntity<>(rankList, HttpStatus.OK);
+        if (userProfileDTO != null) {
+            return new ResponseEntity(userProfileDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("rank-list")
+    public ResponseEntity< Iterable<UserRank>> getRankList() {
+        return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
     }
 }
