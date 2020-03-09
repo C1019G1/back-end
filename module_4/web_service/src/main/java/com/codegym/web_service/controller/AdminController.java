@@ -1,7 +1,6 @@
 package com.codegym.web_service.controller;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
-import com.codegym.dao.entity.User;
 import com.codegym.dao.entity.UserRank;
 import com.codegym.service.UserRankService;
 import com.codegym.service.ipml.UserServiceImpl;
@@ -12,10 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -27,40 +22,40 @@ public class AdminController {
     UserRankService userRankService;
 
     @GetMapping("user-list")
-    public ResponseEntity<?> getUserList(@RequestParam(name = "page") int page,
+    public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
                                          @RequestParam(name = "size") int size,
                                          @RequestParam(name = "name", defaultValue = "") String name,
                                          @RequestParam(name = "rank", defaultValue = "") String rank
     ) {
         Page<AdminUserProfileDTO> adminUserProfileDTOS;
         adminUserProfileDTOS = userService.getUsersProfileByNameByRank(PageRequest.of(page, size), name, rank);
-        return new ResponseEntity<>(adminUserProfileDTOS, HttpStatus.OK);
+        return new ResponseEntity(adminUserProfileDTOS, HttpStatus.OK);
     }
 
     @GetMapping("find")
-    public ResponseEntity<?> searchUser(@RequestParam(name = "id", defaultValue = "") Long id,
+    public ResponseEntity<AdminUserProfileDTO> searchUser(@RequestParam(name = "id", defaultValue = "") Long id,
                                         @RequestParam(name = "email", defaultValue = "") String email) {
         AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
-        if (id != null && email != "") {
+        if (id != null && !email.equals("")) {
             userProfileDTO = userService.getUserProfileDTOByIdAndEmail(id, email);
         } else {
             if (id != null) {
                 userProfileDTO = userService.getUserProfileDTOById(id);
             } else {
-                if (email != "") {
+                if (!email.equals("")) {
                     userProfileDTO = userService.getUserProfileDTOByEmail(email);
                 }
             }
         }
         if (userProfileDTO != null) {
-            return new ResponseEntity<AdminUserProfileDTO>(userProfileDTO, HttpStatus.OK);
+            return new ResponseEntity(userProfileDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<AdminUserProfileDTO>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
     }
 
     @GetMapping("rank-list")
-    public ResponseEntity<?> getRankList() {
-        return new ResponseEntity<>(userRankService.getAllRank(), HttpStatus.OK);
+    public ResponseEntity< Iterable<UserRank>> getRankList() {
+        return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
     }
 }
