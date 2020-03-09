@@ -32,37 +32,35 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
-    public Page<User> getAllUser(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-    public List<User> getAllUser() {
-        return (List<User>) userRepository.findAll();
-    }
-    public AdminUserProfileDTO getUserProfileDTOByEmail(String email){
-        User user= this.userRepository.findByUserProfile_Email(email).orElse(null);
-        if(user!=null){
+    public AdminUserProfileDTO getUserProfileDTOByEmail(String email) {
+        User user = this.userRepository.findByUserProfile_Email(email).orElse(null);
+        if (user != null) {
             return this.getAdminUserProfileDTO(user);
         }
         return null;
     }
-    public AdminUserProfileDTO getUserProfileDTOById(Long id){
-        User user= this.userRepository.findById(id).orElse(null);
-        if (user!=null){
+
+    public AdminUserProfileDTO getUserProfileDTOById(Long id) {
+        User user = this.userRepository.findById(id).orElse(null);
+        if (user != null) {
             return this.getAdminUserProfileDTO(user);
         }
         return null;
     }
-    public AdminUserProfileDTO getUserProfileDTOByIdAndEmail(Long id, String email){
-        User user= this.userRepository.findByIdAndUserProfile_Email(id,email).orElse(null);
-        if (user!=null){
+
+    public AdminUserProfileDTO getUserProfileDTOByIdAndEmail(Long id, String email) {
+        User user = this.userRepository.findByIdAndUserProfile_Email(id, email).orElse(null);
+        if (user != null) {
             return this.getAdminUserProfileDTO(user);
         }
         return null;
     }
-    public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable,String name, String rankName) {
-        Page<User> users =  userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable,name,rankName);
+
+    public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable, String name, String rankName) {
+        Page<User> users = userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable, name, rankName);
         return getUserProfileDTOS(users);
     }
+
     @Override
     @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,7 +70,7 @@ public class UserServiceImpl implements UserDetailsService {
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         Set<Role> roles = user.getRoles();
-        for(Role role: roles){
+        for (Role role : roles) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
@@ -84,10 +82,10 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.save(user);
     }
 
-
     public User findByUserName(String username) {
         return userRepository.findByUserName(username);
     }
+
     private Page<AdminUserProfileDTO> getUserProfileDTOS(Page<User> users) {
         return users.map(this::getAdminUserProfileDTO);
     }
