@@ -23,9 +23,9 @@ public class AdminController {
 
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
-                                         @RequestParam(name = "size") int size,
-                                         @RequestParam(name = "name", defaultValue = "") String name,
-                                         @RequestParam(name = "rank", defaultValue = "") String rank
+                                                                 @RequestParam(name = "size") int size,
+                                                                 @RequestParam(name = "name", defaultValue = "") String name,
+                                                                 @RequestParam(name = "rank", defaultValue = "") String rank
     ) {
         Page<AdminUserProfileDTO> adminUserProfileDTOS;
         adminUserProfileDTOS = userService.getUsersProfileByNameByRank(PageRequest.of(page, size), name, rank);
@@ -34,7 +34,7 @@ public class AdminController {
 
     @GetMapping("find")
     public ResponseEntity<AdminUserProfileDTO> searchUser(@RequestParam(name = "id", defaultValue = "") Long id,
-                                        @RequestParam(name = "email", defaultValue = "") String email) {
+                                                          @RequestParam(name = "email", defaultValue = "") String email) {
         AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
         if (id != null && !email.equals("")) {
             userProfileDTO = userService.getUserProfileDTOByIdAndEmail(id, email);
@@ -55,7 +55,7 @@ public class AdminController {
     }
 
     @GetMapping("rank-list")
-    public ResponseEntity< Iterable<UserRank>> getRankList() {
+    public ResponseEntity<Iterable<UserRank>> getRankList() {
         return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
     }
 }

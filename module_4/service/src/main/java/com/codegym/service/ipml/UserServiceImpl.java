@@ -1,7 +1,6 @@
 package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
-import com.codegym.dao.DTO.UserDTO;
 import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
 import com.codegym.dao.repository.UserRepository;
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUserName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     private Page<AdminUserProfileDTO> getUserProfileDTOS(Page<User> users) {
-        return users.map(this::getAdminUserProfileDTO);
+        return users.map(  this::getAdminUserProfileDTO);
     }
 
     private AdminUserProfileDTO getAdminUserProfileDTO(User user) {
