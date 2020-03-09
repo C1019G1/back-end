@@ -19,9 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -46,10 +44,30 @@ public class UserServiceImpl implements UserDetailsService {
     public void save(User user) {
         userRepository.save(user);
     }
-
+    public AdminUserProfileDTO getUserProfileDTOByEmail(String email){
+        User user= this.userRepository.findByUserProfile_Email(email).orElse(null);
+        if(user!=null){
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
+    }
+    public AdminUserProfileDTO getUserProfileDTOById(Long id){
+        User user= this.userRepository.findById(id).orElse(null);
+        if (user!=null){
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
+    }
+    public AdminUserProfileDTO getUserProfileDTOByIdAndEmail(Long id, String email){
+        User user= this.userRepository.findByIdAndUserProfile_Email(id,email).orElse(null);
+        if (user!=null){
+            return this.getAdminUserProfileDTO(user);
+        }
+        return null;
+    }
     public Page<AdminUserProfileDTO> getUsersProfileByNameByRank(Pageable pageable,String name, String rankName) {
         Page<User> users =  userRepository.findAllByUserProfile_FullNameContainingIgnoreCaseAndUserProfile_Rank_NameContainingIgnoreCase(pageable,name,rankName);
-        return getAdminUserProfileDTOS(users);
+        return getUserProfileDTOS(users);
     }
     @Override
     @Transactional //phải có anotation này , nếu không thì jps không thể get được Role của user
@@ -71,23 +89,25 @@ public class UserServiceImpl implements UserDetailsService {
         User newUser = new User();
         newUser.setUserName(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-
         return userRepository.save(newUser);
     }
 
-    private Page<AdminUserProfileDTO> getAdminUserProfileDTOS(Page<User> users) {
-        return users.map(user -> {
-            AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
-            userProfileDTO.setId(user.getId());
-            userProfileDTO.setAddress(user.getUserProfile().getAddress());
-            userProfileDTO.setFullName(user.getUserProfile().getFullName());
-            userProfileDTO.setEmail(user.getUserProfile().getEmail());
-            userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
-            userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
-            userProfileDTO.setRank(user.getUserProfile().getRank().getName());
-            userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-            userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
-            return userProfileDTO;
-        });
+    private Page<AdminUserProfileDTO> getUserProfileDTOS(Page<User> users) {
+        return users.map(this::getAdminUserProfileDTO);
     }
+
+    private AdminUserProfileDTO getAdminUserProfileDTO(User user) {
+        AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
+        userProfileDTO.setId(user.getId());
+        userProfileDTO.setAddress(user.getUserProfile().getAddress());
+        userProfileDTO.setFullName(user.getUserProfile().getFullName());
+        userProfileDTO.setEmail(user.getUserProfile().getEmail());
+        userProfileDTO.setPhoneNumber(user.getUserProfile().getPhone());
+        userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
+        userProfileDTO.setRank(user.getUserProfile().getRank().getName());
+        userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
+        userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
+        return userProfileDTO;
+    }
+
 }
