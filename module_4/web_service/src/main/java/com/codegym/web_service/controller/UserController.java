@@ -10,6 +10,7 @@ import com.codegym.service.UserProfileService;
 import com.codegym.service.UserRankService;
 import com.codegym.service.ipml.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,21 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public  ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO){
+        // kiểm tra username hoặc email đã tồn tại trong database?
+        User userFindByUsername = userService.findByUserName(userRegisterDTO.getUserName());
+        if(userFindByUsername!=null){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Tài khoản đã tồn tại");
+        }
+        UserProfile userProfileFindByEmail = userProfileService.getUserProfileByEmail(userRegisterDTO.getEmail());
+        if(userProfileFindByEmail!=null){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("email này đã được đăng ký");
+        }
         //đặt Rank mặc định cho user
         UserRank userRank = userRankService.getById((long) 4);
-
         UserProfile userProfile = new UserProfile();
         userProfile.setFullName(userRegisterDTO.getFullName());
         userProfile.setEmail(userRegisterDTO.getEmail());
@@ -53,7 +66,6 @@ public class UserController {
         user.setUserName(userRegisterDTO.getUserName());
         user.setPassword(userRegisterDTO.getPassword());
         user.setUserProfile(userProfile);
-
 
         Set userRole =new HashSet();
         userRole.add(roleService.findByid((long) 3));
