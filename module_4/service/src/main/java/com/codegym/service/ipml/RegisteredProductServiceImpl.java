@@ -2,7 +2,9 @@ package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.RegisteredProductDTO;
 import com.codegym.dao.DTO.RegisteredProductDetailDTO;
+import com.codegym.dao.entity.Auction;
 import com.codegym.dao.entity.RegisteredProduct;
+import com.codegym.dao.repository.AuctionRepository;
 import com.codegym.dao.repository.RegisteredProductRepository;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import java.util.List;
 public class RegisteredProductServiceImpl implements RegisteredProductService {
     @Autowired
     RegisteredProductRepository registeredProductRepository;
+    @Autowired
+    AuctionRepository auctionRepository;
 
     @Override
     public List<RegisteredProductDTO> getAllRegisteredProductEndDay() {
@@ -42,11 +46,12 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
         }
         return registeredProductDTOS;
     }
-
     @Override
     public RegisteredProductDetailDTO getByIdRegisterProduct(Long id) {
        RegisteredProduct registeredProduct = registeredProductRepository.findById(id).orElse(null);
+
        RegisteredProductDetailDTO registeredProductDetailDTO =new RegisteredProductDetailDTO();
+        List <Auction> auctions = auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
             registeredProductDetailDTO.setId(registeredProduct.getId());
             registeredProductDetailDTO.setProduct_id(registeredProduct.getProduct().getId());
             registeredProductDetailDTO.setName_product(registeredProduct.getProduct().getName());
@@ -60,9 +65,19 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             registeredProductDetailDTO.setProduct_info(registeredProduct.getProduct().getProductInfo());
             registeredProductDetailDTO.setStart_day(registeredProduct.getProduct().getStartDay());
             registeredProductDetailDTO.setStart_price(registeredProduct.getProduct().getStartPrice());
+        List<Date> arrayBetTime =new ArrayList<>();
+        List<String> arrayUser= new ArrayList<> ();
+        List<Long> arrayBetPrice= new ArrayList<> ();
+        for (Auction auction: auctions){
+            arrayBetTime.add(auction.getBetTime());
+            arrayUser.add(auction.getUser().getUserName());
+            arrayBetPrice.add(auction.getBetPrice());
+        }
+        registeredProductDetailDTO.setBetPriceList(arrayBetPrice);
+        registeredProductDetailDTO.setBetTimeList(arrayBetTime);
+        registeredProductDetailDTO.setUserList(arrayUser);
         return registeredProductDetailDTO;
     }
-
     @Override
     public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable,String catalogue, Date nowDay) {
         Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, catalogue, nowDay);
