@@ -24,12 +24,6 @@ public class RegisterProductController {
     RegisteredProductService registeredProductService;
     @Autowired
     AuctionService auctionService;
-
-//    @GetMapping("/list")
-//    public ResponseEntity<?> getAllRegisteredProduct() {
-//        List<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductEndDay();
-//        return new ResponseEntity<>(registeredProductDTOS, HttpStatus.OK);
-//    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getByIdRegisterProduct(@PathVariable Long id) {
         RegisteredProductDetailDTO registeredProductDetailDTO = registeredProductService.getByIdRegisterProduct(id);
@@ -54,31 +48,5 @@ public class RegisterProductController {
         Date nowDay =new Date();
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(PageRequest.of(page, size),name,price1,price2,catalogue,nowDay);
         return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
-    }
-//    @GetMapping(value = "/search", params = {"catalogue"})
-//    public ResponseEntity<?> getAllRegisteredProductByCatalogue(@RequestParam ("catalogue") String catalogue,
-//                                                           @RequestParam("page") int page,
-//                                                           @RequestParam("size") int size)
-//                                                            {
-//        Date nowDay =new Date();
-//        Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByCatalogue(PageRequest.of(page, size) ,catalogue, nowDay);
-//        return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
-//    }
-    @GetMapping(value = "/search", params = {"id"})
-    public ResponseEntity<?> getAuctionById(@RequestParam ("id") Long id) {
-     List <Auction>  auctions = auctionService.findAuctionById(id);
-        List<Date> arrayBetTime =new ArrayList<>();
-        List<String> arrayUser= new ArrayList<> ();
-        List<Long> arrayBetPrice= new ArrayList<> ();
-        for (Auction auction: auctions) {
-            System.out.println(auction.getBetTime());
-            arrayBetTime.add(auction.getBetTime());
-            arrayUser.add(auction.getUser().getUserName());
-            arrayBetPrice.add(auction.getBetPrice());
-        }
-        System.out.println(arrayBetPrice);
-        System.out.println(arrayBetTime);
-        System.out.println(arrayUser);
-        return new ResponseEntity<>(arrayBetTime, HttpStatus.OK);
     }
 }
