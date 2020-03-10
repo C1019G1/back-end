@@ -29,7 +29,8 @@ public class UserProfileImpl implements UserProfileService {
 
     @Override
     public boolean checkEmailIsExisted(String email) {
-        return userProfileRepository.findByEmail(email);
+        UserProfile userProfile= userProfileRepository.getUserProfileByEmail(email);
+        return (userProfile!=null);
     }
 
 

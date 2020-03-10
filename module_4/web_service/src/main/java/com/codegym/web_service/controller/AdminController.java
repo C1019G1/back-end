@@ -68,11 +68,15 @@ public class AdminController {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("Tài khoản đã tồn tại");
+        } else {
+            System.out.println("pass username");
         }
         if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("email này đã được đăng ký");
+        } else {
+            System.out.println("pass email");
         }
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
