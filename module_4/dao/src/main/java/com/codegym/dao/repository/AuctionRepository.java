@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface AuctionRepository extends PagingAndSortingRepository<Auction, Long> {
  List<Auction> findTop5ByRegisteredProductIdOrderByBetTimeDesc(Long id);
+ Auction findFirstByRegisteredProductIdOrderByBetPriceDesc(Long id);
 }

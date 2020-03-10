@@ -51,13 +51,11 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
        RegisteredProduct registeredProduct = registeredProductRepository.findById(id).orElse(null);
 
        RegisteredProductDetailDTO registeredProductDetailDTO =new RegisteredProductDetailDTO();
-        List <Auction> auctions = auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
             registeredProductDetailDTO.setId(registeredProduct.getId());
             registeredProductDetailDTO.setProductId(registeredProduct.getProduct().getId());
             registeredProductDetailDTO.setNameProduct(registeredProduct.getProduct().getName());
             registeredProductDetailDTO.setContractAddress(registeredProduct.getProduct().getContractAddress());
             registeredProductDetailDTO.setContractPhoneNumber(registeredProduct.getProduct().getContractPhoneNumber());
-            registeredProductDetailDTO.setCurrentPrice(registeredProduct.getCurrentPrice());
             registeredProductDetailDTO.setEndDay(registeredProduct.getProduct().getEndDay());
             registeredProductDetailDTO.setImg(registeredProduct.getProduct().getImg());
             registeredProductDetailDTO.setMinBet(registeredProduct.getProduct().getMinBet());
@@ -65,17 +63,24 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             registeredProductDetailDTO.setProductInfo(registeredProduct.getProduct().getProductInfo());
             registeredProductDetailDTO.setStartDay(registeredProduct.getProduct().getStartDay());
             registeredProductDetailDTO.setStartPrice(registeredProduct.getProduct().getStartPrice());
-        List<Date> arrayBetTime =new ArrayList<>();
-        List<String> arrayUser= new ArrayList<> ();
-        List<Long> arrayBetPrice= new ArrayList<> ();
-        for (Auction auction: auctions){
-            arrayBetTime.add(auction.getBetTime());
-            arrayUser.add(auction.getUser().getUserName());
-            arrayBetPrice.add(auction.getBetPrice());
-        }
-        registeredProductDetailDTO.setBetPriceList(arrayBetPrice);
-        registeredProductDetailDTO.setBetTimeList(arrayBetTime);
-        registeredProductDetailDTO.setUserList(arrayUser);
+        Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
+            if (auction1 ==null){
+                registeredProductDetailDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
+            }else {
+                registeredProductDetailDTO.setCurrentPrice(auction1.getBetPrice());
+            }
+        List <Auction> auctions = auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
+            List<Date> arrayBetTime =new ArrayList<>();
+            List<String> arrayUser= new ArrayList<> ();
+            List<Long> arrayBetPrice= new ArrayList<> ();
+            for (Auction auction: auctions){
+                arrayBetTime.add(auction.getBetTime());
+                arrayUser.add(auction.getUser().getUserName());
+                arrayBetPrice.add(auction.getBetPrice());
+            }
+            registeredProductDetailDTO.setBetPriceList(arrayBetPrice);
+            registeredProductDetailDTO.setBetTimeList(arrayBetTime);
+            registeredProductDetailDTO.setUserList(arrayUser);
         return registeredProductDetailDTO;
     }
     @Override
@@ -85,10 +90,16 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
             registeredProductDTO.setId(registeredProduct.getId());
-            registeredProductDTO.setCurrentPrice(registeredProduct.getCurrentPrice());
             registeredProductDTO.setEndDay(registeredProduct.getProduct().getEndDay());
             registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
             registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
+            Long id = registeredProduct.getId();
+            Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
+            if (auction1 ==null){
+                registeredProductDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
+            }else {
+                registeredProductDTO.setCurrentPrice(auction1.getBetPrice());
+            }
             return registeredProductDTO;
         });
         return registeredProductDTOS;
@@ -102,10 +113,16 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
             registeredProductDTO.setId(registeredProduct.getId());
-            registeredProductDTO.setCurrentPrice(registeredProduct.getCurrentPrice());
             registeredProductDTO.setEndDay(registeredProduct.getProduct().getEndDay());
             registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
             registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
+            Long id = registeredProduct.getId();
+            Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
+            if (auction1 ==null){
+                registeredProductDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
+            }else {
+                registeredProductDTO.setCurrentPrice(auction1.getBetPrice());
+            }
             return registeredProductDTO;
         });
         return registeredProductDTOS;
