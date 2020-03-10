@@ -63,16 +63,21 @@ public class AdminController {
     }
     @PostMapping("user-register")
     public ResponseEntity userRegisterByAdmin(@RequestBody UserRegisterDTO userRegisterDTO) {
+        System.out.println(userRegisterDTO);
         // kiểm tra username hoặc email đã tồn tại trong database?
         if(userService.checkUsernameIsExisted(userRegisterDTO.getUserName())){
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("Tài khoản đã tồn tại");
+        } else {
+            System.out.println("pass username");
         }
         if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("email này đã được đăng ký");
+        } else {
+            System.out.println("pass email");
         }
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
