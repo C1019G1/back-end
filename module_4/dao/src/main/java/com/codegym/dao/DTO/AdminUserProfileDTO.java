@@ -9,25 +9,15 @@ public class AdminUserProfileDTO {
     private String address;
     private String rank;
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
     private Optional<Date> lastLogin;
     private int contributePoint;
     private boolean status;
 
     public AdminUserProfileDTO() {
+        // Contructor
     }
 
-    public AdminUserProfileDTO(Long id, String fullName, String address, String rank, String email, int phoneNumber, Optional<Date> lastLogin, int contributePoint, boolean status) {
-        this.id = id;
-        this.fullName = fullName;
-        this.address = address;
-        this.rank = rank;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.lastLogin = lastLogin;
-        this.contributePoint = contributePoint;
-        this.status = status;
-    }
 
     public Optional<Date> getLastLogin() {
         return lastLogin;
@@ -77,11 +67,11 @@ public class AdminUserProfileDTO {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
