@@ -1,11 +1,12 @@
 package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
+import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserRepository;
-import com.codegym.service.UserLockListService;
-import com.codegym.service.UserLoginHistoryService;
+import com.codegym.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,12 @@ public class UserServiceImpl implements UserDetailsService {
     UserLoginHistoryService loginHistoryService;
     @Autowired
     private PasswordEncoder bcryptEncoder;
-
+    @Autowired
+    UserRankService userRankService;
+    @Autowired
+    UserProfileService userProfileService;
+    @Autowired
+    RoleService roleService;
     public AdminUserProfileDTO getUserProfileDTOByEmail(String email) {
         User user = this.userRepository.findByUserProfile_Email(email).orElse(null);
         if (user != null) {
@@ -76,7 +82,26 @@ public class UserServiceImpl implements UserDetailsService {
                 grantedAuthorities);
     }
 
-    public User save(User user) {
+    public User save(UserRegisterDTO userRegisterDTO) {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setFullName(userRegisterDTO.getFullName());
+        userProfile.setEmail(userRegisterDTO.getEmail());
+        userProfile.setAddress(userRegisterDTO.getAddress());
+        userProfile.setIdentityNumber(userRegisterDTO.getIdentityNumber());
+        userProfile.setPhone(userRegisterDTO.getPhone());
+        userProfile.setRank(userRegisterDTO.getRank());
+        userProfile.setDayOfBirth(userRegisterDTO.getDayOfBirth());
+        userProfile.setRank(userRankService.getById((long) 4));
+        userProfileService.save(userProfile);
+
+        User user = new User();
+        user.setUserName(userRegisterDTO.getUserName());
+        user.setPassword(userRegisterDTO.getPassword());
+        user.setUserProfile(userProfile);
+
+        Set<Role> userRole =new HashSet<>();
+        userRole.add(roleService.findByid((long) 3));
+        user.setRoles(userRole);
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
