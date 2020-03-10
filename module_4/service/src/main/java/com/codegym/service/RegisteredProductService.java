@@ -11,14 +11,10 @@ import java.util.Date;
 import java.util.List;
 
 public interface RegisteredProductService {
-    List<RegisteredProductDTO> getAllRegisteredProductEndDay();
     RegisteredProductDetailDTO getByIdRegisterProduct(Long id);
 
     Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable, String catalogue, Date nowDay);
 
     Page<RegisteredProductDTO> getAllRegisteredProductByNamePriceCatalogue(Pageable pageable,String name, Long price1,Long price2, String catalogue, Date nowDay);
 
-    List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2);
-
-    Page<RegisteredProductDTO> getAllRegisteredProductByCatalogue(Pageable pageable, String catalogue, Date nowDay);
 }
