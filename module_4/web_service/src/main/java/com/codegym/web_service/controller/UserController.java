@@ -35,19 +35,16 @@ public class UserController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public  ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO){
         // kiểm tra username hoặc email đã tồn tại trong database?
-        User userFindByUsername = userService.findByUserName(userRegisterDTO.getUserName());
-        if(userFindByUsername!=null){
+        if(userService.checkUsernameIsExisted(userRegisterDTO.getUserName())){
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("Tài khoản đã tồn tại");
         }
-        UserProfile userProfileFindByEmail = userProfileService.getUserProfileByEmail(userRegisterDTO.getEmail());
-        if(userProfileFindByEmail!=null){
+        if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("email này đã được đăng ký");
         }
-        //đặt Rank mặc định cho user
 
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
