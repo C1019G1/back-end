@@ -1,7 +1,9 @@
 package com.codegym.web_service.controller;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.UserRank;
+import com.codegym.service.UserProfileService;
 import com.codegym.service.UserRankService;
 import com.codegym.service.ipml.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,13 @@ public class AdminController {
     UserServiceImpl userService;
     @Autowired
     UserRankService userRankService;
-
+    @Autowired
+    UserProfileService userProfileService;
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
-                                         @RequestParam(name = "size") int size,
-                                         @RequestParam(name = "name", defaultValue = "") String name,
-                                         @RequestParam(name = "rank", defaultValue = "") String rank
+                                                                 @RequestParam(name = "size") int size,
+                                                                 @RequestParam(name = "name", defaultValue = "") String name,
+                                                                 @RequestParam(name = "rank", defaultValue = "") String rank
     ) {
         Page<AdminUserProfileDTO> adminUserProfileDTOS;
         adminUserProfileDTOS = userService.getUsersProfileByNameByRank(PageRequest.of(page, size), name, rank);
@@ -34,7 +37,7 @@ public class AdminController {
 
     @GetMapping("find")
     public ResponseEntity<AdminUserProfileDTO> searchUser(@RequestParam(name = "id", defaultValue = "") Long id,
-                                        @RequestParam(name = "email", defaultValue = "") String email) {
+                                                          @RequestParam(name = "email", defaultValue = "") String email) {
         AdminUserProfileDTO userProfileDTO = new AdminUserProfileDTO();
         if (id != null && !email.equals("")) {
             userProfileDTO = userService.getUserProfileDTOByIdAndEmail(id, email);
@@ -55,7 +58,26 @@ public class AdminController {
     }
 
     @GetMapping("rank-list")
-    public ResponseEntity< Iterable<UserRank>> getRankList() {
+    public ResponseEntity<Iterable<UserRank>> getRankList() {
         return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
+    }
+    @PostMapping("user-register")
+    public ResponseEntity userRegisterByAdmin(@RequestBody UserRegisterDTO userRegisterDTO) {
+        // kiểm tra username hoặc email đã tồn tại trong database?
+        if(userService.checkUsernameIsExisted(userRegisterDTO.getUserName())){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Tài khoản đã tồn tại");
+        } else {
+            System.out.println("pass username");
+        }
+        if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("email này đã được đăng ký");
+        } else {
+            System.out.println("pass email");
+        }
+        return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
 }

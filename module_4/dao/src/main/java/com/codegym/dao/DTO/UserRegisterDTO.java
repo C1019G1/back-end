@@ -17,7 +17,7 @@ public class UserRegisterDTO extends UserProfile {
         this.password = password;
     }
 
-    public UserRegisterDTO(String fullName, String email, int phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank, String userName, String password) {
+    public UserRegisterDTO(String fullName, String email, String phone, int identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank, String userName, String password) {
         super(fullName, email, phone, identityNumber, address, contributePoint, dayOfBirth, rank);
         this.userName = userName;
         this.password = password;

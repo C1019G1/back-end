@@ -1,10 +1,8 @@
 package com.codegym.dao.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "user_rank")
 public class UserRank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +13,7 @@ public class UserRank {
 
 
     public UserRank() {
-
+        //constructor
     }
 
 

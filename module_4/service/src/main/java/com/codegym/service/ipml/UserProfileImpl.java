@@ -22,5 +22,17 @@ public class UserProfileImpl implements UserProfileService {
         return userProfileRepository.save(userProfile);
     }
 
+    @Override
+    public UserProfile getUserProfileByEmail(String email) {
+        return userProfileRepository.getUserProfileByEmail(email);
+    }
+
+    @Override
+    public boolean checkEmailIsExisted(String email) {
+        UserProfile userProfile= userProfileRepository.getUserProfileByEmail(email);
+        return (userProfile!=null);
+    }
+
+
 
 }

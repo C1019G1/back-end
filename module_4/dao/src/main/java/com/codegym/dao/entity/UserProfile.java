@@ -18,10 +18,10 @@ public class UserProfile {
     private String email;
 
     @Column
-    private int phone;
+    private String phone;
 
     @Column
-    private Long identityNumber;
+    private int identityNumber;
 
     @Column
     private String address;
@@ -30,7 +30,7 @@ public class UserProfile {
     private int contributePoint;
 
     @Temporal(TemporalType.DATE)
-    @Column()
+    @Column
     private Date dayOfBirth;
 
 
@@ -39,9 +39,10 @@ public class UserProfile {
     private UserRank rank;
 
     public UserProfile() {
+        // Contructor
     }
 
-    public UserProfile(String fullName, String email, int phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+    public UserProfile(String fullName, String email, String phone, int identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
@@ -83,19 +84,19 @@ public class UserProfile {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public Long getIdentityNumber() {
+    public int getIdentityNumber() {
         return identityNumber;
     }
 
-    public void setIdentityNumber(Long identityNumber) {
+    public void setIdentityNumber(int identityNumber) {
         this.identityNumber = identityNumber;
     }
 
