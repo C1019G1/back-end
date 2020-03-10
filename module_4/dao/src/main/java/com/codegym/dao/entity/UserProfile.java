@@ -18,7 +18,7 @@ public class UserProfile {
     private String email;
 
     @Column
-    private Long phone;
+    private String phone;
 
     @Column
     private Long identityNumber;
@@ -41,7 +41,7 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile(String fullName, String email, Long phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+    public UserProfile(String fullName, String email, String phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
@@ -76,11 +76,11 @@ public class UserProfile {
         this.email = email;
     }
 
-    public Long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
