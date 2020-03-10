@@ -91,6 +91,7 @@ public class UserServiceImpl implements UserDetailsService {
         userProfile.setPhone(userRegisterDTO.getPhone());
         userProfile.setRank(userRegisterDTO.getRank());
         userProfile.setDayOfBirth(userRegisterDTO.getDayOfBirth());
+        userProfile.setContributePoint(0);
         if (userRegisterDTO.getRank()==null){
             userProfile.setRank(userRankService.getById((long) 4));
         } else {

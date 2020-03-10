@@ -1,7 +1,9 @@
 package com.codegym.web_service.controller;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.UserRank;
+import com.codegym.service.UserProfileService;
 import com.codegym.service.UserRankService;
 import com.codegym.service.ipml.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ public class AdminController {
     UserServiceImpl userService;
     @Autowired
     UserRankService userRankService;
-
+    @Autowired
+    UserProfileService userProfileService;
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
                                                                  @RequestParam(name = "size") int size,
@@ -57,5 +60,20 @@ public class AdminController {
     @GetMapping("rank-list")
     public ResponseEntity<Iterable<UserRank>> getRankList() {
         return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
+    }
+    @PostMapping("user-register")
+    public ResponseEntity userRegisterByAdmin(@RequestBody UserRegisterDTO userRegisterDTO) {
+        // kiểm tra username hoặc email đã tồn tại trong database?
+        if(userService.checkUsernameIsExisted(userRegisterDTO.getUserName())){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Tài khoản đã tồn tại");
+        }
+        if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("email này đã được đăng ký");
+        }
+        return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
 }
