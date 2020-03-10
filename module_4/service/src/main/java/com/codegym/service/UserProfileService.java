@@ -6,4 +6,5 @@ public interface UserProfileService {
    UserProfile findAllProfileUser(Long id);
    UserProfile save(UserProfile userProfile);
    UserProfile getUserProfileByEmail(String email);
+   boolean checkEmailIsExisted(String email);
 }

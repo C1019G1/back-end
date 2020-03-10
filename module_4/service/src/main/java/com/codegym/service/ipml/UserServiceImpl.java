@@ -91,7 +91,12 @@ public class UserServiceImpl implements UserDetailsService {
         userProfile.setPhone(userRegisterDTO.getPhone());
         userProfile.setRank(userRegisterDTO.getRank());
         userProfile.setDayOfBirth(userRegisterDTO.getDayOfBirth());
-        userProfile.setRank(userRankService.getById((long) 4));
+        if (userRegisterDTO.getRank()==null){
+            userProfile.setRank(userRankService.getById((long) 4));
+        } else {
+            userProfile.setRank(userRankService.getById(userRegisterDTO.getRank().getId()));
+        }
+
         userProfileService.save(userProfile);
 
         User user = new User();
@@ -126,5 +131,8 @@ public class UserServiceImpl implements UserDetailsService {
         userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
         userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
         return userProfileDTO;
+    }
+    public boolean checkUsernameIsExisted(String username){
+        return userRepository.findByUserName(username)!=null;
     }
 }
