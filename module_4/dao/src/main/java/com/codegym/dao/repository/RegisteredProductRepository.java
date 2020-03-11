@@ -14,10 +14,6 @@ import java.util.List;
 
 @Repository
 public interface RegisteredProductRepository extends PagingAndSortingRepository<RegisteredProduct,Long> {
-    List<RegisteredProduct> findByProductNameContaining(String name);
-    Page<RegisteredProduct> findAllByProductEndDayGreaterThan(Pageable pageable,Date nowDay);
-    List<RegisteredProduct> findAllByProductContractPhoneNumber(String name);
     Page<RegisteredProduct> findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable,String name,Long price1,Long price2, String catalogue, Date nowDay);
-    List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2);
     Page<RegisteredProduct> findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable, String catalogue, Date nowDay);
 }
