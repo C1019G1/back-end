@@ -4,8 +4,6 @@ import com.codegym.dao.DTO.AdminUserLockListDTO;
 import com.codegym.dao.entity.User;
 import com.codegym.dao.entity.UserLockList;
 import com.codegym.dao.repository.UserLockListRepository;
-import com.codegym.dao.repository.UserProfileRepository;
-import com.codegym.dao.repository.UserRankRepository;
 import com.codegym.dao.repository.UserRepository;
 import com.codegym.service.UserLockListService;
 import org.springframework.beans.factory.annotation.Autowired;
