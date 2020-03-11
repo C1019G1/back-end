@@ -25,43 +25,44 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
 
     @Override
     public RegisteredProductDetailDTO getByIdRegisterProduct(Long id) {
-       RegisteredProduct registeredProduct = registeredProductRepository.findById(id).orElse(null);
+        RegisteredProduct registeredProduct = registeredProductRepository.findById(id).orElse(null);
 
-       RegisteredProductDetailDTO registeredProductDetailDTO =new RegisteredProductDetailDTO();
-            registeredProductDetailDTO.setId(registeredProduct.getId());
-            registeredProductDetailDTO.setProductId(registeredProduct.getProduct().getId());
-            registeredProductDetailDTO.setNameProduct(registeredProduct.getProduct().getName());
-            registeredProductDetailDTO.setContractAddress(registeredProduct.getProduct().getContractAddress());
-            registeredProductDetailDTO.setContractPhoneNumber(registeredProduct.getProduct().getContractPhoneNumber());
-            registeredProductDetailDTO.setEndDay(registeredProduct.getProduct().getEndDay());
-            registeredProductDetailDTO.setImg(registeredProduct.getProduct().getImg());
-            registeredProductDetailDTO.setMinBet(registeredProduct.getProduct().getMinBet());
-            registeredProductDetailDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
-            registeredProductDetailDTO.setProductInfo(registeredProduct.getProduct().getProductInfo());
-            registeredProductDetailDTO.setStartDay(registeredProduct.getProduct().getStartDay());
-            registeredProductDetailDTO.setStartPrice(registeredProduct.getProduct().getStartPrice());
+        RegisteredProductDetailDTO registeredProductDetailDTO = new RegisteredProductDetailDTO();
+        registeredProductDetailDTO.setId(registeredProduct.getId());
+        registeredProductDetailDTO.setProductId(registeredProduct.getProduct().getId());
+        registeredProductDetailDTO.setNameProduct(registeredProduct.getProduct().getName());
+        registeredProductDetailDTO.setContractAddress(registeredProduct.getProduct().getContractAddress());
+        registeredProductDetailDTO.setContractPhoneNumber(registeredProduct.getProduct().getContractPhoneNumber());
+        registeredProductDetailDTO.setEndDay(registeredProduct.getProduct().getEndDay());
+        registeredProductDetailDTO.setImg(registeredProduct.getProduct().getImg());
+        registeredProductDetailDTO.setMinBet(registeredProduct.getProduct().getMinBet());
+        registeredProductDetailDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
+        registeredProductDetailDTO.setProductInfo(registeredProduct.getProduct().getProductInfo());
+        registeredProductDetailDTO.setStartDay(registeredProduct.getProduct().getStartDay());
+        registeredProductDetailDTO.setStartPrice(registeredProduct.getProduct().getStartPrice());
         Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
-            if (auction1 ==null){
-                registeredProductDetailDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
-            }else {
-                registeredProductDetailDTO.setCurrentPrice(auction1.getBetPrice());
-            }
-        List <Auction> auctions = auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
-            List<Date> arrayBetTime =new ArrayList<>();
-            List<String> arrayUser= new ArrayList<> ();
-            List<Long> arrayBetPrice= new ArrayList<> ();
-            for (Auction auction: auctions){
-                arrayBetTime.add(auction.getBetTime());
-                arrayUser.add(auction.getUser().getUserName());
-                arrayBetPrice.add(auction.getBetPrice());
-            }
-            registeredProductDetailDTO.setBetPriceList(arrayBetPrice);
-            registeredProductDetailDTO.setBetTimeList(arrayBetTime);
-            registeredProductDetailDTO.setUserList(arrayUser);
+        if (auction1 == null) {
+            registeredProductDetailDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
+        } else {
+            registeredProductDetailDTO.setCurrentPrice(auction1.getBetPrice());
+        }
+        List<Auction> auctions = auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
+        List<Date> arrayBetTime = new ArrayList<>();
+        List<String> arrayUser = new ArrayList<>();
+        List<Long> arrayBetPrice = new ArrayList<>();
+        for (Auction auction : auctions) {
+            arrayBetTime.add(auction.getBetTime());
+            arrayUser.add(auction.getUser().getUserName());
+            arrayBetPrice.add(auction.getBetPrice());
+        }
+        registeredProductDetailDTO.setBetPriceList(arrayBetPrice);
+        registeredProductDetailDTO.setBetTimeList(arrayBetTime);
+        registeredProductDetailDTO.setUserList(arrayUser);
         return registeredProductDetailDTO;
     }
+
     @Override
-    public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable,String catalogue, Date nowDay) {
+    public Page<RegisteredProductDTO> getAllRegisteredProduct(Pageable pageable, String catalogue, Date nowDay) {
         Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, catalogue, nowDay);
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
@@ -72,9 +73,9 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
             Long id = registeredProduct.getId();
             Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
-            if (auction1 ==null){
+            if (auction1 == null) {
                 registeredProductDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
-            }else {
+            } else {
                 registeredProductDTO.setCurrentPrice(auction1.getBetPrice());
             }
             return registeredProductDTO;
@@ -83,9 +84,9 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     }
 
     @Override
-    public Page<RegisteredProductDTO> getAllRegisteredProductByNamePriceCatalogue(Pageable pageable, String name, Long price1,Long price2, String catalogue, Date nowDay) {
+    public Page<RegisteredProductDTO> getAllRegisteredProductByNamePriceCatalogue(Pageable pageable, String name, Long price1, Long price2, String catalogue, Date nowDay) {
 
-        Page<RegisteredProduct> registeredProducts =registeredProductRepository.findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable,name, price1,price2, catalogue,nowDay);
+        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, name, price1, price2, catalogue, nowDay);
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
             RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
             registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
@@ -95,9 +96,9 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
             registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
             Long id = registeredProduct.getId();
             Auction auction1 = auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
-            if (auction1 ==null){
+            if (auction1 == null) {
                 registeredProductDTO.setCurrentPrice(registeredProduct.getProduct().getStartPrice());
-            }else {
+            } else {
                 registeredProductDTO.setCurrentPrice(auction1.getBetPrice());
             }
             return registeredProductDTO;
