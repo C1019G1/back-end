@@ -1,5 +1,6 @@
 package com.codegym.dao.repository;
 
+
 import com.codegym.dao.entity.RegisteredProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

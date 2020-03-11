@@ -14,6 +14,7 @@ public class ProductCatalogue {
     private String name;
 
     public ProductCatalogue() {
+        //constructor
     }
 
     public Long getId() {

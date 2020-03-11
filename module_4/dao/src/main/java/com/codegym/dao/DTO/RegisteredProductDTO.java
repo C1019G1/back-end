@@ -10,6 +10,10 @@ public class RegisteredProductDTO {
     private String img;
     private String catalogue;
 
+    public RegisteredProductDTO() {
+        //constructor
+    }
+
     public Long getId() {
         return id;
     }

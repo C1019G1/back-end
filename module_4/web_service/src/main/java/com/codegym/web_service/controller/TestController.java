@@ -49,30 +49,5 @@ public class TestController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO user){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword())
-        );
-        UserDetails userDetails = userServiceImpl
-                .loadUserByUsername(authentication.getName());
-        String jwtToken=jwtTokenUtil.generateToken(userDetails);
-        String username =  userDetails.getUsername();
-        String rolename = getMaxRoleName(username) ;
-        return ResponseEntity.ok( new JwtResponse(jwtToken , username , rolename));
-    }
-    public String getMaxRoleName(String username){
-        String rolename = "ROLE_VISITOR";
-        Set<String> role_names =  new HashSet<>();
-        User user = userService.findByUserName(username);
-        Set<Role> roles = user.getRoles();
-        for (Role role: roles) {
-            role_names.add(role.getName());
-        }
-        if (role_names.contains("ROLE_USER")){rolename = "ROLE_USER";}
-        if (role_names.contains("ROLE_MEMBER")){rolename = "ROLE_MEMBER";}
-        if (role_names.contains("ROLE_ADMIN")){rolename = "ROLE_ADMIN";}
-        return rolename;
-    }
 }
 
