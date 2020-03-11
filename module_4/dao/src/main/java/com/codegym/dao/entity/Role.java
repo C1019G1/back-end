@@ -16,6 +16,7 @@ public class Role {
 
 
     public Role() {
+        //constructor
     }
 
     public Long getId() {

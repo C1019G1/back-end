@@ -18,6 +18,25 @@ public class UserProfileImpl implements UserProfileService {
     }
 
     @Override
+    public UserProfile save(UserProfile userProfile) {
+        return userProfileRepository.save(userProfile);
+    }
+
+    @Override
+    public UserProfile getUserProfileByEmail(String email) {
+        return userProfileRepository.getUserProfileByEmail(email);
+    }
+
+    @Override
+    public boolean checkEmailIsExisted(String email) {
+        UserProfile userProfile= userProfileRepository.getUserProfileByEmail(email);
+        return (userProfile!=null);
+    }
+
+
+
+
+    @Override
     public UserProfile findById(Long id) {
         return userProfileRepository.findById(id).orElse(null);
     }
@@ -27,5 +46,3 @@ public class UserProfileImpl implements UserProfileService {
         userProfileRepository.save(userProfile);
     }
 }
-
-

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserLockListRepository extends PagingAndSortingRepository<UserLockList,Long> {
+      UserLockList findFirstByUserIdOrderByDayLockEndDesc(Long userId);
 }

@@ -9,7 +9,7 @@ public class Product{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String Name;
+    private String name;
     @Column
     private Long startPrice;
     @Column
@@ -40,7 +40,7 @@ public class Product{
     private User user;
 
     public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean status, ProductCatalogue productCatalogue, User user) {
-        Name = name;
+        this.name = name;
         this.startPrice = startPrice;
         this.minBet = minBet;
         this.productInfo = productInfo;
@@ -67,11 +67,11 @@ public class Product{
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public Long getStartPrice() {
