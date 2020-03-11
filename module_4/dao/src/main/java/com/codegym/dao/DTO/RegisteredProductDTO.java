@@ -4,32 +4,13 @@ import java.util.Date;
 
 public class RegisteredProductDTO {
     private Long id;
-    private String name_product;
-    private Long current_price;
-    private Date end_day;
+    private String nameProduct;
+    private Long currentPrice;
+    private Date endDay;
     private String img;
     private String catalogue;
-//    private Long min_bet;
-//    private Long product_id;
-
-//    private String contract_address;
-//    private String contract_phone_number;
-
-//    private Date start_day;
-//    private Long start_price;
-//    private String product_info;
-
 
     public RegisteredProductDTO() {
-    }
-
-    public RegisteredProductDTO(Long id, String name_product, Long current_price, Date end_day, String img, String catalogue) {
-        this.id = id;
-        this.name_product = name_product;
-        this.current_price = current_price;
-        this.end_day = end_day;
-        this.img = img;
-        this.catalogue = catalogue;
     }
 
     public Long getId() {
@@ -40,28 +21,28 @@ public class RegisteredProductDTO {
         this.id = id;
     }
 
-    public String getName_product() {
-        return name_product;
+    public String getNameProduct() {
+        return nameProduct;
     }
 
-    public void setName_product(String name_product) {
-        this.name_product = name_product;
+    public void setNameProduct(String nameProduct) {
+        this.nameProduct = nameProduct;
     }
 
-    public Long getCurrent_price() {
-        return current_price;
+    public Long getCurrentPrice() {
+        return currentPrice;
     }
 
-    public void setCurrent_price(Long current_price) {
-        this.current_price = current_price;
+    public void setCurrentPrice(Long currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
-    public Date getEnd_day() {
-        return end_day;
+    public Date getEndDay() {
+        return endDay;
     }
 
-    public void setEnd_day(Date end_day) {
-        this.end_day = end_day;
+    public void setEndDay(Date endDay) {
+        this.endDay = endDay;
     }
 
     public String getImg() {

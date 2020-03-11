@@ -30,7 +30,7 @@ public class UserProfile {
     private int contributePoint;
 
     @Temporal(TemporalType.DATE)
-    @Column()
+    @Column
     private Date dayOfBirth;
 
 
@@ -42,9 +42,16 @@ public class UserProfile {
         // Contructor
     }
 
-    public UserProfile(String fullName, String email, String phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+    public UserProfile(String fullName, String email, String phone, int identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.identityNumber = identityNumber;
+        this.address = address;
+        this.contributePoint = contributePoint;
+        this.dayOfBirth = dayOfBirth;
+        this.rank = rank;
     }
-
 
     public String getAddress() {
         return address;
