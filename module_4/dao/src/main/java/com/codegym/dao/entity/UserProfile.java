@@ -42,6 +42,9 @@ public class UserProfile {
         // Contructor
     }
 
+    public UserProfile(String fullName, String email, String phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, UserRank rank) {
+    }
+
 
     public String getAddress() {
         return address;
