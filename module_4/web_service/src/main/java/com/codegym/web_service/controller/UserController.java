@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.common.RandomString;
 import com.codegym.common.SendGmailService;
 import com.codegym.dao.DTO.*;
 import com.codegym.dao.entity.*;
@@ -139,7 +140,9 @@ public class UserController {
             User user = userService.findByUserName(resetPasswordDTO.getUserName());
             UserProfile userProfile = userProfileService.getUserProfileByEmail(resetPasswordDTO.getEmail());
             if (user.getUserProfile().equals(userProfile)) {
-                String newPassword = "1234567";
+                RandomString randomString = new RandomString();
+                String newPassword = randomString.getAlphaNumericString(20);
+                System.out.println(newPassword);
                 user.setPassword(newPassword);
                 userService.changePassword(user.getUserName(),newPassword);
                 SendGmailService sendGmailService = new SendGmailService();
