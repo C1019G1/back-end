@@ -11,6 +11,7 @@ public class RegisteredProductDTO {
     private String catalogue;
 
     public RegisteredProductDTO() {
+        //constructor
     }
 
     public Long getId() {
