@@ -5,7 +5,9 @@ import com.codegym.dao.DTO.UserDTO;
 import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
+import com.codegym.dao.entity.UserLockList;
 import com.codegym.dao.entity.UserLoginHistory;
+import com.codegym.service.UserLockListService;
 import com.codegym.service.UserLoginHistoryService;
 import com.codegym.service.UserProfileService;
 import com.codegym.service.ipml.UserServiceImpl;
@@ -42,7 +44,8 @@ public class UserController {
     JwtTokenUtil jwtTokenUtil;
     @Autowired
     UserLoginHistoryService userLoginHistoryService;
-
+    @Autowired
+    UserLockListService userLockListService;
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -61,16 +64,32 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
-        );
-        UserDetails userDetails = userService
-                .loadUserByUsername(authentication.getName());
+        UserDetails userDetails  = null;
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
+            );
+            userDetails = userService
+                    .loadUserByUsername(authentication.getName());
+        }
+        catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Thông tin đăng nhập không chính xác");
+        }
         String jwtToken = jwtTokenUtil.generateToken(userDetails);
         String username = userDetails.getUsername();
         String rolename = getMaxRoleName(username);
 
         User user = userService.findByUserName(username);
+        UserLockList userlock = userLockListService.checkStatus(user.getId());
+        if ( userlock != null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("tài khoản của bạn đang bị khóa cho đến :  " + userlock.getDayLockEnd()
+                    + " .Vì lí do : "  + userlock.getReasonLock()
+                    );
+        }
         userLoginHistoryService.saveNewLoginSession(user);
         return ResponseEntity.ok(new JwtResponse(jwtToken, username, rolename));
     }
