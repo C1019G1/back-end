@@ -1,8 +1,10 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.dao.DTO.AdminUserLockListDTO;
 import com.codegym.dao.DTO.AdminUserProfileDTO;
 import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.UserRank;
+import com.codegym.service.UserLockListService;
 import com.codegym.service.UserProfileService;
 import com.codegym.service.UserRankService;
 import com.codegym.service.ipml.UserServiceImpl;
@@ -24,6 +26,8 @@ public class AdminController {
     UserRankService userRankService;
     @Autowired
     UserProfileService userProfileService;
+    @Autowired
+    UserLockListService userLockListService;
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
                                                                  @RequestParam(name = "size") int size,
@@ -79,5 +83,15 @@ public class AdminController {
             System.out.println("pass email");
         }
         return ResponseEntity.ok(userService.save(userRegisterDTO));
+    }
+    @PostMapping("user-lock")
+    public ResponseEntity userlockByAdmin(@RequestBody AdminUserLockListDTO userLockListDTO){
+        if(this.userLockListService.save(userLockListDTO)){
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Biểu mẫu không có giá trị");
+        }
     }
 }
