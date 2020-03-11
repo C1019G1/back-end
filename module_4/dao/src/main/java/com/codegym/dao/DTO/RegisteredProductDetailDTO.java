@@ -22,6 +22,7 @@ public class RegisteredProductDetailDTO {
     private List<Date> betTimeList;
 
     public RegisteredProductDetailDTO() {
+        //constructor
     }
 
     public Long getId() {
