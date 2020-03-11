@@ -1,21 +1,14 @@
 package com.codegym.web_service.controller;
 
-import com.codegym.dao.DTO.HistoryRegisterProductDTO;
 import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
-import com.codegym.service.HistoryRegisterProductService;
+import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
@@ -26,7 +19,7 @@ public class UserController {
     private UserProfileService userProfileService;
 
     @Autowired
-    private HistoryRegisterProductService historyRegisterProductService;
+    private HistoryAuctionProductService historyAuctionProductService;
 
     @Autowired
     private UserProfileRepository userProfileRepository;
