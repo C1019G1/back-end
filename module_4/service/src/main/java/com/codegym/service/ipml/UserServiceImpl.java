@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserDetailsService {
         userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
         userProfileDTO.setRank(user.getUserProfile().getRank().getName());
         userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-        userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
+        userProfileDTO.setStatus((this.lockListService.checkStatus(user.getId())!=null));
         return userProfileDTO;
     }
     public boolean checkUsernameIsExisted(String username){
