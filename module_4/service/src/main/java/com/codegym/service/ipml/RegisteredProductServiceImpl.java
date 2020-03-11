@@ -9,7 +9,6 @@ import com.codegym.dao.repository.RegisteredProductRepository;
 import com.codegym.service.RegisteredProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,28 +23,6 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
     @Autowired
     AuctionRepository auctionRepository;
 
-//    @Override
-//    public List<RegisteredProductDTO> getAllRegisteredProductEndDay() {
-//        List<RegisteredProduct> registeredProducts = (List<RegisteredProduct>) registeredProductRepository.findAll();
-//        List<RegisteredProduct> registeredProducts1 = new ArrayList<RegisteredProduct>();
-//        for (RegisteredProduct registeredProduct:registeredProducts){
-//            if (registeredProduct.getProduct().getEndDay().compareTo(new Date()) >0){
-//                registeredProducts1.add(registeredProduct);
-//            }
-//        }
-//        List<RegisteredProductDTO> registeredProductDTOS =new ArrayList<RegisteredProductDTO>();
-//        for (RegisteredProduct registeredProduct:registeredProducts1){
-//            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
-//            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
-//            registeredProductDTO.setId(registeredProduct.getId());
-//            registeredProductDTO.setCurrentPrice(registeredProduct.getCurrentPrice());
-//            registeredProductDTO.setEndDay(registeredProduct.getProduct().getEndDay());
-//            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
-//            registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
-//            registeredProductDTOS.add(registeredProductDTO);
-//        }
-//        return registeredProductDTOS;
-//    }
     @Override
     public RegisteredProductDetailDTO getByIdRegisterProduct(Long id) {
        RegisteredProduct registeredProduct = registeredProductRepository.findById(id).orElse(null);
@@ -127,26 +104,4 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
         });
         return registeredProductDTOS;
     }
-
-//    @Override
-//    public List<RegisteredProduct> findAllByProductStartPriceBetween(Long number1, Long number2) {
-//        return registeredProductRepository.findAllByProductStartPriceBetween(number1,number2);
-//    }
-//
-//    @Override
-//    public Page<RegisteredProductDTO> getAllRegisteredProductByCatalogue(Pageable pageable, String catalogue, Date nowDay) {
-//        Page<RegisteredProduct> registeredProducts = registeredProductRepository.findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(pageable, catalogue , nowDay);
-//        Page<RegisteredProductDTO> registeredProductDTOS = registeredProducts.map(registeredProduct -> {
-//            RegisteredProductDTO registeredProductDTO = new RegisteredProductDTO();
-//            registeredProductDTO.setCatalogue(registeredProduct.getProduct().getProductCatalogue().getName());
-//            registeredProductDTO.setId(registeredProduct.getId());
-//            registeredProductDTO.setCurrentPrice(registeredProduct.getCurrentPrice());
-//            registeredProductDTO.setEndDay(registeredProduct.getProduct().getEndDay());
-//            registeredProductDTO.setImg(registeredProduct.getProduct().getImg());
-//            registeredProductDTO.setNameProduct(registeredProduct.getProduct().getName());
-//            return registeredProductDTO;
-//        });
-//        return registeredProductDTOS;
-//    }
-//
 }

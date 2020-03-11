@@ -2,7 +2,6 @@ package com.codegym.web_service.controller;
 
 import com.codegym.dao.DTO.RegisteredProductDTO;
 import com.codegym.dao.DTO.RegisteredProductDetailDTO;
-import com.codegym.dao.entity.Auction;
 import com.codegym.service.RegisteredProductService;
 import com.codegym.service.ipml.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -27,7 +23,6 @@ public class RegisterProductController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getByIdRegisterProduct(@PathVariable Long id) {
         RegisteredProductDetailDTO registeredProductDetailDTO = registeredProductService.getByIdRegisterProduct(id);
-        System.out.println(registeredProductDetailDTO);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
     @GetMapping("list")
