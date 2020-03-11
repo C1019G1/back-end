@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.dao.DTO.ChangePasswordDTO;
 import com.codegym.dao.DTO.JwtResponse;
 import com.codegym.dao.DTO.UserDTO;
 import com.codegym.dao.DTO.UserRegisterDTO;
@@ -119,5 +120,20 @@ public class UserController {
         User user = userService.findByUserName("admin");
         List<String> userLoginHistoryList = userLoginHistoryService.getAllLoginTime(user);
         return ResponseEntity.ok(userLoginHistoryList);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody() ChangePasswordDTO changePasswordDTO) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(changePasswordDTO.getUsername(), changePasswordDTO.getOldPassword())
+            );
+            userService.changePassword(changePasswordDTO.getUsername(),changePasswordDTO.getNewPassword());
+            return ResponseEntity.ok("");
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Thông tin tài khoản không chính xác");
+        }
     }
 }

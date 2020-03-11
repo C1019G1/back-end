@@ -81,7 +81,11 @@ public class UserServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
                 grantedAuthorities);
     }
-
+    public void changePassword(String  username, String password){
+        User user = userRepository.findByUserName(username);
+        user.setPassword(bcryptEncoder.encode(password));
+        userRepository.save(user);
+    }
     public User save(UserRegisterDTO userRegisterDTO) {
         UserProfile userProfile = new UserProfile();
         userProfile.setFullName(userRegisterDTO.getFullName());
