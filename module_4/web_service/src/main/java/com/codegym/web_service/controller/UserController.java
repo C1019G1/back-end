@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.common.SendGmailService;
 import com.codegym.dao.DTO.*;
 import com.codegym.dao.entity.*;
 import com.codegym.service.UserLockListService;
@@ -138,14 +139,21 @@ public class UserController {
             User user = userService.findByUserName(resetPasswordDTO.getUserName());
             UserProfile userProfile = userProfileService.getUserProfileByEmail(resetPasswordDTO.getEmail());
             if (user.getUserProfile().equals(userProfile)) {
-                System.out.println("dung");
+                String newPassword = "1234567";
+                user.setPassword(newPassword);
+                userService.changePassword(user.getUserName(),newPassword);
+                SendGmailService sendGmailService = new SendGmailService();
+                sendGmailService.setReceiverMail(resetPasswordDTO.getEmail());
+                sendGmailService.setTitle("Mật khẩu mới");
+                sendGmailService.setContent("mật khẩu mới của bạn là " + newPassword);
+                sendGmailService.sendMail();
+                return ResponseEntity.ok("");
             }
             else {
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body("Thông tin tài khoản không chính xác");
             }
-            return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
