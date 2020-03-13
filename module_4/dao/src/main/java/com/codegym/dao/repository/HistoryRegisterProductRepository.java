@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface HistoryRegisterProductRepository extends JpaRepository<Product, Long> {
 
-    @Query(value = "SELECT * from product Where user_id =:userId ",
-
-            nativeQuery = true)
-    List<Product> findProductByUserId(@Param("userId") Long userId,@Param("page") Pageable page);
+//    @Query(value = "SELECT * from product Where user_id =:userId ",
+//
+//            nativeQuery = true)
+    Page<Product> findAllByUserId(Pageable pageable, Long id);
 
 }

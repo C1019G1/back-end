@@ -1,9 +1,7 @@
 package com.codegym.dao.DTO;
 
-import com.codegym.dao.entity.UserRank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
 import java.util.Date;
 
 public class UseProfileDTO {
@@ -18,7 +16,7 @@ public class UseProfileDTO {
     private String phone;
 
     @JsonProperty(value = "identityNumber")
-    private Long identityNumber;
+    private int identityNumber;
 
     @JsonProperty(value = "address")
     private String address;
@@ -57,11 +55,11 @@ public class UseProfileDTO {
         this.phone = phone;
     }
 
-    public Long getIdentityNumber() {
+    public int getIdentityNumber() {
         return identityNumber;
     }
 
-    public void setIdentityNumber(Long identityNumber) {
+    public void setIdentityNumber(int identityNumber) {
         this.identityNumber = identityNumber;
     }
 
@@ -97,7 +95,7 @@ public class UseProfileDTO {
         this.rank = rank;
     }
 
-    public UseProfileDTO(String fullName, String email, String phone, Long identityNumber, String address, int contributePoint, Date dayOfBirth, String rank) {
+    public UseProfileDTO(String fullName, String email, String phone, int identityNumber, String address, int contributePoint, Date dayOfBirth, String rank) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;

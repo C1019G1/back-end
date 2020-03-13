@@ -1,5 +1,6 @@
 package com.codegym.service;
 
+import com.codegym.dao.entity.User;
 import com.codegym.dao.entity.UserProfile;
 
 public interface UserProfileService {
@@ -9,4 +10,5 @@ public interface UserProfileService {
    boolean checkEmailIsExisted(String email);
    UserProfile findById(Long id);
    void editUserProfile ( UserProfile userProfile);
+
 }

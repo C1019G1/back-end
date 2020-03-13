@@ -13,12 +13,14 @@ import com.codegym.service.UserProfileService;
 import com.codegym.service.ipml.UserServiceImpl;
 import com.codegym.web_service.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +57,8 @@ public class UserController {
     UserLoginHistoryService userLoginHistoryService;
     @Autowired
     UserLockListService userLockListService;
+    @Autowired
+    UserDetailsService userDetailsService;
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -131,25 +135,27 @@ public class UserController {
     }
 
     @Autowired
-    private UserProfileService userProfileService;
-
-    @Autowired
     private HistoryAuctionProductService historyAuctionProductService;
 
     @Autowired
     private UserProfileRepository userProfileRepository;
 
 
+    @GetMapping("getid/{username}")
+    public ResponseEntity<?> getIdByUserName(@PathVariable("username") String username){
+        User user =userService.findByUserName(username);
+        UserProfile userProfile = userProfileService.findById(user.getId());
+        return new ResponseEntity<>(userProfile, HttpStatus.OK);
+    }
     //Get info to idUserProfile
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getAllInfoUser(@PathVariable("id") Long id) {
         UserProfile userProfiles = userProfileService.findAllProfileUser(id);
-        System.out.println(userProfiles);
         return new ResponseEntity<>(userProfiles, HttpStatus.OK);
     }
 
     //Update info
-    @PutMapping("/update/{id}")
+    @PutMapping("/user/update/{id}")
     public ResponseEntity<UserProfile> editUserProfile(@RequestBody UserProfile userProfile, @PathVariable("id") long id) {
         UserProfile userProfiles = userProfileService.findById(id);
         if (userProfiles == null) {
@@ -179,7 +185,7 @@ public class UserController {
 //    }
 
     //save
-    @PutMapping("/{userID}")
+    @PutMapping("user/{userID}")
     public ResponseEntity<?> getAllHistoryRegisterProducts(@PathVariable("userID") Long userID,
                                                            @RequestBody UseProfileDTO useProfileDTO
                                                            ) {
@@ -198,5 +204,7 @@ public class UserController {
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
+
 }
 
