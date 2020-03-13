@@ -24,7 +24,6 @@ public class RegisterProductController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getByIdRegisterProduct(@PathVariable Long id) {
         RegisteredProductDetailDTO registeredProductDetailDTO = registeredProductService.getByIdRegisterProduct(id);
-        System.out.println(registeredProductDetailDTO);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
     @GetMapping("list")

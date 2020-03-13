@@ -1,26 +1,21 @@
 package com.codegym.web_service.controller;
 
-import com.codegym.dao.DTO.JwtResponse;
-import com.codegym.dao.DTO.UserDTO;
-import com.codegym.dao.DTO.UserRegisterDTO;
-import com.codegym.dao.entity.Role;
-import com.codegym.dao.entity.User;
-import com.codegym.dao.entity.UserLockList;
-import com.codegym.dao.entity.UserLoginHistory;
+import com.codegym.common.RandomString;
+import com.codegym.common.SendGmailService;
+import com.codegym.dao.DTO.*;
+import com.codegym.dao.entity.*;
 import com.codegym.service.UserLockListService;
 import com.codegym.service.UserLoginHistoryService;
 import com.codegym.service.UserProfileService;
 import com.codegym.service.ipml.UserServiceImpl;
 import com.codegym.web_service.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +54,7 @@ public class UserController {
     UserLockListService userLockListService;
     @Autowired
     UserDetailsService userDetailsService;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -77,15 +73,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
-        UserDetails userDetails  = null;
+        UserDetails userDetails = null;
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
             );
             userDetails = userService
                     .loadUserByUsername(authentication.getName());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Thông tin đăng nhập không chính xác");
@@ -96,11 +91,11 @@ public class UserController {
 
         User user = userService.findByUserName(username);
         UserLockList userlock = userLockListService.checkStatus(user.getId());
-        if ( userlock != null) {
+        if (userlock != null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("tài khoản của bạn đang bị khóa cho đến :  " + userlock.getDayLockEnd()
-                    + " .Vì lí do : "  + userlock.getReasonLock()
+                            + " .Vì lí do : " + userlock.getReasonLock()
                     );
         }
         userLoginHistoryService.saveNewLoginSession(user);
@@ -206,5 +201,51 @@ public class UserController {
     }
 
 
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody() ChangePasswordDTO changePasswordDTO) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(changePasswordDTO.getUsername(), changePasswordDTO.getOldPassword())
+            );
+            userService.changePassword(changePasswordDTO.getUsername(), changePasswordDTO.getNewPassword());
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Thông tin tài khoản không chính xác");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody() ResetPasswordDTO resetPasswordDTO) {
+
+        try {
+            User user = userService.findByUserName(resetPasswordDTO.getUserName());
+            UserProfile userProfile = userProfileService.getUserProfileByEmail(resetPasswordDTO.getEmail());
+            if (user.getUserProfile().equals(userProfile)) {
+                RandomString randomString = new RandomString();
+                String newPassword = randomString.getAlphaNumericString(20);
+                System.out.println(newPassword);
+                user.setPassword(newPassword);
+                userService.changePassword(user.getUserName(),newPassword);
+                SendGmailService sendGmailService = new SendGmailService();
+                sendGmailService.setReceiverMail(resetPasswordDTO.getEmail());
+                sendGmailService.setTitle("Mật khẩu mới");
+                sendGmailService.setContent("mật khẩu mới của bạn là " + newPassword);
+                sendGmailService.sendMail();
+                return ResponseEntity.ok("");
+            }
+            else {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("Thông tin tài khoản không chính xác");
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Thông tin tài khoản không chính xác");
+        }
+    }
 }
 

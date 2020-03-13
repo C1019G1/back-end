@@ -81,7 +81,11 @@ public class UserServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
                 grantedAuthorities);
     }
-
+    public void changePassword(String  username, String password){
+        User user = userRepository.findByUserName(username);
+        user.setPassword(bcryptEncoder.encode(password));
+        userRepository.save(user);
+    }
     public User save(UserRegisterDTO userRegisterDTO) {
         UserProfile userProfile = new UserProfile();
         userProfile.setFullName(userRegisterDTO.getFullName());
@@ -130,7 +134,7 @@ public class UserServiceImpl implements UserDetailsService {
         userProfileDTO.setContributePoint(user.getUserProfile().getContributePoint());
         userProfileDTO.setRank(user.getUserProfile().getRank().getName());
         userProfileDTO.setLastLogin(this.loginHistoryService.findLastLoginByUserId(user.getId()));
-        userProfileDTO.setStatus(this.lockListService.findByUserId(user.getId()));
+        userProfileDTO.setStatus((this.lockListService.checkStatus(user.getId())!=null));
         return userProfileDTO;
     }
     public boolean checkUsernameIsExisted(String username){
