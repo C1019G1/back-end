@@ -94,7 +94,7 @@ public class UserController {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("tài khoản của bạn đang bị khóa cho đến :  " + userlock.getDayLockEnd()
-                            + " .Vì lí do : " + userlock.getReasonLock()
+                            + " \nVì lí do : " + userlock.getReasonLock()
                     );
         }
         userLoginHistoryService.saveNewLoginSession(user);
