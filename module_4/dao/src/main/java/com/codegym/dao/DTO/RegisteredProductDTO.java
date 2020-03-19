@@ -1,13 +1,14 @@
 package com.codegym.dao.DTO;
 
 import java.util.Date;
+import java.util.List;
 
 public class RegisteredProductDTO {
     private Long id;
     private String nameProduct;
     private Long currentPrice;
     private Date endDay;
-    private String img;
+    private List<String> img;
     private String catalogue;
 
     public RegisteredProductDTO() {
@@ -46,11 +47,11 @@ public class RegisteredProductDTO {
         this.endDay = endDay;
     }
 
-    public String getImg() {
+    public List<String> getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(List<String> img) {
         this.img = img;
     }
 
