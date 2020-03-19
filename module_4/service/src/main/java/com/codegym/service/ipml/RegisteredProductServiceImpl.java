@@ -97,10 +97,7 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
 
     private List<String> getImageUrl(Set<Image> images){
         List<String> imageUrl= new ArrayList<>();
-        for (Image image: images
-        ) {
-            imageUrl.add(image.getUrl());
-        }
+        images.forEach(image -> imageUrl.add(image.getUrl()));
         return imageUrl;
     }
 }
