@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.common.SendGmailService;
 import com.codegym.dao.DTO.RegisteredProductDTO;
 import com.codegym.dao.DTO.RegisteredProductDetailDTO;
 import com.codegym.service.RegisteredProductService;
@@ -9,10 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.Date;
-
+@EnableScheduling
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("product")
@@ -26,7 +30,7 @@ public class RegisterProductController {
         RegisteredProductDetailDTO registeredProductDetailDTO = registeredProductService.getByIdRegisterProduct(id);
         return new ResponseEntity<>(registeredProductDetailDTO, HttpStatus.OK);
     }
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResponseEntity<?> getAllRegisteredProduct(@RequestParam("page") int page,
                                                       @RequestParam("size") int size,
                                                       @RequestParam("catalogue") String catalogue) {
@@ -45,4 +49,10 @@ public class RegisterProductController {
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(PageRequest.of(page, size),name,price1,price2,catalogue,nowDay);
         return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
     }
+//    @Scheduled(fixedRate = 15000)
+//    @GetMapping(value = "schedule")
+//    public ResponseEntity<?> schedue() {
+//        System.out.println("Xin chào bạn");
+//        return new ResponseEntity<>("thành công",HttpStatus.OK);
+//    }
 }
