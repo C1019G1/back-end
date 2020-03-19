@@ -2,6 +2,7 @@ package com.codegym.dao.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Product{
@@ -22,8 +23,13 @@ public class Product{
     private String contractAddress;
     @Column
     private String warranty;
-    @Column
-    private String img;
+    @OneToMany
+    @JoinTable(
+            name = "product_img",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private Set<Image> images;
     @Column
     private Date startDay;
     @Column
@@ -39,23 +45,9 @@ public class Product{
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean status, ProductCatalogue productCatalogue, User user) {
-        this.name = name;
-        this.startPrice = startPrice;
-        this.minBet = minBet;
-        this.productInfo = productInfo;
-        this.contractPhoneNumber = contractPhoneNumber;
-        this.contractAddress = contractAddress;
-        this.warranty = warranty;
-        this.img = img;
-        this.startDay = startDay;
-        this.endDay = endDay;
-        this.status = status;
-        this.productCatalogue = productCatalogue;
-        this.user = user;
-    }
 
     public Product() {
+        //constructor
     }
 
     public Long getId() {
@@ -122,12 +114,12 @@ public class Product{
         this.warranty = warranty;
     }
 
-    public String getImg() {
-        return img;
+    public Set<Image> getImages() {
+        return images;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     public Date getStartDay() {
