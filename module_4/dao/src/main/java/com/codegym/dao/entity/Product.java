@@ -186,7 +186,7 @@ public class Product{
         productInforDTO.setName(this.name);
         productInforDTO.setStartPrice(this.startPrice);
         productInforDTO.setWarranty(this.warranty);
-        productInforDTO.setImg(this.img);
+        productInforDTO.setImages(this.images);
         productInforDTO.setStartDay(this.startDay);
         productInforDTO.setEndDay(this.endDay);
         productInforDTO.setPending_status(this.pending_status);

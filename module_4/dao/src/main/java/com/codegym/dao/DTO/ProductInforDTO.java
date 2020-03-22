@@ -1,9 +1,11 @@
 package com.codegym.dao.DTO;
 
+import com.codegym.dao.entity.Image;
 import com.codegym.dao.entity.Product;
 
 import javax.persistence.Column;
 import java.util.Date;
+import java.util.Set;
 
 public class ProductInforDTO {
     private Long id;
@@ -12,7 +14,7 @@ public class ProductInforDTO {
     private Long minBet;
     private String productInfo;
     private String warranty;
-    private String img;
+    private Set<Image> images;
     private Date startDay;
     private Date endDay;
     private boolean pending_status;
@@ -106,12 +108,12 @@ public class ProductInforDTO {
         this.warranty = warranty;
     }
 
-    public String getImg() {
-        return img;
+    public Set<Image> getImages() {
+        return images;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     public Date getStartDay() {
@@ -187,7 +189,7 @@ public class ProductInforDTO {
         product.setMinBet(this.minBet);
         product.setProductInfo(this.productInfo);
         product.setWarranty(this.warranty);
-        product.setImg(this.img);
+        product.setImages(this.images);
         product.setStartDay(this.startDay);
         product.setEndDay(this.endDay);
         product.setContractAddress(this.contractAddress);
