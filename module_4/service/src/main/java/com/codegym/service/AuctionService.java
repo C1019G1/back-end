@@ -9,4 +9,5 @@ public interface AuctionService {
     List<Auction> findAuctionById(Long id);
     Auction findCurrentPriceById(Long id);
     List<AuctionDTO> findTop5(Long id);
+    boolean save (AuctionDTO auctionDTO, Long id);
 }
