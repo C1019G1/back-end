@@ -1,7 +1,9 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.dao.DTO.AuctionDTO;
 import com.codegym.dao.DTO.RegisteredProductDTO;
 import com.codegym.dao.DTO.RegisteredProductDetailDTO;
+import com.codegym.dao.entity.Auction;
 import com.codegym.service.RegisteredProductService;
 import com.codegym.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -44,5 +47,21 @@ public class RegisterProductController {
         Date nowDay =new Date();
         Page<RegisteredProductDTO> registeredProductDTOS = registeredProductService.getAllRegisteredProductByNamePriceCatalogue(PageRequest.of(page, size),name,price1,price2,catalogue,nowDay);
         return new ResponseEntity<>(registeredProductDTOS.getContent(), HttpStatus.OK);
+    }
+    @GetMapping(value = "/current-price")
+    public ResponseEntity<?> getCurrentPriceByProductId(@RequestParam("id") Long registeredProductId){
+        Auction auction = auctionService.findCurrentPriceById(registeredProductId);
+        if (auction!=null){
+            return new ResponseEntity<>(auction.getBetPrice(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+    }
+    @GetMapping(value = "/top-five")
+    public ResponseEntity<?> getTopFive(@RequestParam("id") Long registeredProductId){
+        List<AuctionDTO> auctionDTOList = auctionService.findTop5(registeredProductId);
+        if (!auctionDTOList.isEmpty()){
+            return new ResponseEntity<>(auctionDTOList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
     }
 }
