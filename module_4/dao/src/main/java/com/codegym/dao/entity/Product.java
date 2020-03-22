@@ -4,6 +4,7 @@ import com.codegym.dao.DTO.ProductInforDTO;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Product{
@@ -24,8 +25,13 @@ public class Product{
     private String contractAddress;
     @Column
     private String warranty;
-    @Column
-    private String img;
+    @OneToMany
+    @JoinTable(
+            name = "product_img",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private Set<Image> images;
     @Column
     private Date startDay;
     @Column
@@ -51,7 +57,6 @@ public class Product{
         this.contractPhoneNumber = contractPhoneNumber;
         this.contractAddress = contractAddress;
         this.warranty = warranty;
-        this.img = img;
         this.startDay = startDay;
         this.endDay = endDay;
         this.pending_status = pending_status;
@@ -61,6 +66,7 @@ public class Product{
     }
 
     public Product() {
+        //constructor
     }
 
     public Long getId() {
@@ -127,12 +133,12 @@ public class Product{
         this.warranty = warranty;
     }
 
-    public String getImg() {
-        return img;
+    public Set<Image> getImages() {
+        return images;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     public Date getStartDay() {

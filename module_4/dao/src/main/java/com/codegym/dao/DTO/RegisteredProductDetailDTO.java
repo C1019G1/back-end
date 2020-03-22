@@ -8,7 +8,7 @@ public class RegisteredProductDetailDTO {
     private String nameProduct;
     private Long currentPrice;
     private Date endDay;
-    private String img;
+    private List<String> img;
     private String catalogue;
     private Long minBet;
     private Long productId;
@@ -57,11 +57,11 @@ public class RegisteredProductDetailDTO {
         this.endDay = endDay;
     }
 
-    public String getImg() {
+    public List<String> getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(List<String> img) {
         this.img = img;
     }
 
