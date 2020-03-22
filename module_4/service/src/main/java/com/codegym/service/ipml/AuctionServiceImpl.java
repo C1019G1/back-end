@@ -17,4 +17,9 @@ public class AuctionServiceImpl implements AuctionService {
     public List<Auction> findAuctionById(Long id) {
         return auctionRepository.findTop5ByRegisteredProductIdOrderByBetTimeDesc(id);
     }
+
+    @Override
+    public Auction findCurrentPriceById(Long id) {
+        return auctionRepository.findFirstByRegisteredProductIdOrderByBetPriceDesc(id);
+    }
 }

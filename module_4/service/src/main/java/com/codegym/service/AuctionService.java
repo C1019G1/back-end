@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AuctionService {
     List<Auction> findAuctionById(Long id);
+    Auction findCurrentPriceById(Long id);
 }
