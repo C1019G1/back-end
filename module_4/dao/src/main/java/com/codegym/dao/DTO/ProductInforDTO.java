@@ -17,7 +17,44 @@ public class ProductInforDTO {
     private Date endDay;
     private boolean pending_status;
     private boolean approva_status;
+    private Long idUser;
     private String userName;
+    private String fullName;
+    private String email;
+    private String phone;
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     private String catalogue;
     private String contractPhoneNumber;
     private String contractAddress;

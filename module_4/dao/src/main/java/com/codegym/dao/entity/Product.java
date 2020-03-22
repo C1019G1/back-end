@@ -185,10 +185,15 @@ public class Product{
         productInforDTO.setEndDay(this.endDay);
         productInforDTO.setPending_status(this.pending_status);
         productInforDTO.setApprova_status(this.approva_status);
+        productInforDTO.setIdUser(this.user.getId());
         productInforDTO.setUserName(this.user.getUserName());
+        productInforDTO.setFullName(this.user.getUserProfile().getFullName());
+        productInforDTO.setEmail(this.user.getUserProfile().getEmail());
+        productInforDTO.setPhone(this.user.getUserProfile().getPhone());
         productInforDTO.setCatalogue(this.productCatalogue.getName());
         productInforDTO.setContractPhoneNumber(this.contractPhoneNumber);
         productInforDTO.setContractAddress(this.contractAddress);
+        productInforDTO.setProductInfo(this.productInfo);
         return productInforDTO;
     }
 }

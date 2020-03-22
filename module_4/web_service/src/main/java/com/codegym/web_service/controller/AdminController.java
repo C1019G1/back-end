@@ -112,15 +112,11 @@ public class AdminController {
         User user = userService.findByUserName(userName);
         UserProfile userProfile = user.getUserProfile();
         Object object = new Object() {
-            private Long id = userProfile.getId();
+            private Long idUser = userProfile.getId();
             private String fullName = userProfile.getFullName();
             private String email = userProfile.getEmail();
-            public Long getId() {
-                return id;
-            }
-            public void setId(Long id) {
-                this.id = id;
-            }
+            private String userName = user.getUserName();
+            private String phone = userProfile.getPhone();
             public String getFullName() {
                 return fullName;
             }
@@ -132,6 +128,24 @@ public class AdminController {
             }
             public void setEmail(String email) {
                 this.email = email;
+            }
+            public Long getIdUser() {
+                return idUser;
+            }
+            public void setIdUser(Long idUser) {
+                this.idUser = idUser;
+            }
+            public String getUserName() {
+                return userName;
+            }
+            public void setUserName(String userName) {
+                this.userName = userName;
+            }
+            public String getPhone() {
+                return phone;
+            }
+            public void setPhone(String phone) {
+                this.phone = phone;
             }
         };
         return ResponseEntity.ok(object);
