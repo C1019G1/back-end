@@ -4,9 +4,7 @@ import com.codegym.common.RandomString;
 import com.codegym.common.SendGmailService;
 import com.codegym.dao.DTO.*;
 import com.codegym.dao.entity.*;
-import com.codegym.service.UserLockListService;
-import com.codegym.service.UserLoginHistoryService;
-import com.codegym.service.UserProfileService;
+import com.codegym.service.*;
 import com.codegym.service.ipml.UserServiceImpl;
 import com.codegym.web_service.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import java.util.Set;
 import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
-import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,6 +50,8 @@ public class UserController {
     UserLoginHistoryService userLoginHistoryService;
     @Autowired
     UserLockListService userLockListService;
+    @Autowired
+    UserTransactionService userTransactionService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
@@ -247,6 +246,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/cart")
+    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
+        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
+        if (transactionDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
+    }
 
 }
 
