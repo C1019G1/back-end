@@ -1,5 +1,7 @@
 package com.codegym.dao.entity;
 
+import com.codegym.dao.DTO.ProductInforDTO;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -34,8 +36,10 @@ public class Product{
     private Date startDay;
     @Column
     private Date endDay;
-    @Column
-    private boolean status;
+    @Column()
+    private boolean pending_status =true;
+    @Column()
+    private boolean approva_status = false;
 
     @ManyToOne
     @JoinColumn(name = "product_catalogue_id")
@@ -45,6 +49,21 @@ public class Product{
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean pending_status, boolean approva_status, ProductCatalogue productCatalogue, User user) {
+        this.name = name;
+        this.startPrice = startPrice;
+        this.minBet = minBet;
+        this.productInfo = productInfo;
+        this.contractPhoneNumber = contractPhoneNumber;
+        this.contractAddress = contractAddress;
+        this.warranty = warranty;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.pending_status = pending_status;
+        this.approva_status = approva_status;
+        this.productCatalogue = productCatalogue;
+        this.user = user;
+    }
 
     public Product() {
         //constructor
@@ -139,11 +158,11 @@ public class Product{
     }
 
     public boolean isStatus() {
-        return status;
+        return this.approva_status;
     }
 
     public void setStatus(boolean status) {
-        this.status = status;
+        this.approva_status = status;
     }
 
     public ProductCatalogue getProductCatalogue() {
@@ -161,7 +180,26 @@ public class Product{
     public void setUser(User user) {
         this.user = user;
     }
-
-
-
+    public ProductInforDTO toProductInforDTO(){
+        ProductInforDTO productInforDTO  = new ProductInforDTO();
+        productInforDTO.setId(this.id);
+        productInforDTO.setName(this.name);
+        productInforDTO.setStartPrice(this.startPrice);
+        productInforDTO.setWarranty(this.warranty);
+        productInforDTO.setImages(this.images);
+        productInforDTO.setStartDay(this.startDay);
+        productInforDTO.setEndDay(this.endDay);
+        productInforDTO.setPending_status(this.pending_status);
+        productInforDTO.setApprova_status(this.approva_status);
+        productInforDTO.setIdUser(this.user.getId());
+        productInforDTO.setUserName(this.user.getUserName());
+        productInforDTO.setFullName(this.user.getUserProfile().getFullName());
+        productInforDTO.setEmail(this.user.getUserProfile().getEmail());
+        productInforDTO.setPhone(this.user.getUserProfile().getPhone());
+        productInforDTO.setCatalogue(this.productCatalogue.getName());
+        productInforDTO.setContractPhoneNumber(this.contractPhoneNumber);
+        productInforDTO.setContractAddress(this.contractAddress);
+        productInforDTO.setProductInfo(this.productInfo);
+        return productInforDTO;
+    }
 }
