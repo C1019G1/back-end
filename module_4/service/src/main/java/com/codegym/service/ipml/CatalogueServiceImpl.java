@@ -6,6 +6,8 @@ import com.codegym.service.CatalogueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CatalogueServiceImpl implements CatalogueService {
     @Autowired
@@ -13,5 +15,10 @@ public class CatalogueServiceImpl implements CatalogueService {
     @Override
     public ProductCatalogue findByName(String name) {
         return catalogueRepository.findByName(name);
+    }
+
+    @Override
+    public List<ProductCatalogue> getAll() {
+        return catalogueRepository.findAll();
     }
 }
