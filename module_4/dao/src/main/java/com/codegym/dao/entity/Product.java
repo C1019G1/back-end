@@ -29,7 +29,9 @@ public class Product{
     @Column
     private Date endDay;
     @Column
-    private boolean status;
+    private boolean pendingStatus = true;
+    @Column
+    private boolean approvaStatus = false;
 
     @ManyToOne
     @JoinColumn(name = "product_catalogue_id")
@@ -39,7 +41,11 @@ public class Product{
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean status, ProductCatalogue productCatalogue, User user) {
+
+    public Product() {
+    }
+
+    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean pendingStatus, boolean approvaStatus, ProductCatalogue productCatalogue, User user) {
         this.name = name;
         this.startPrice = startPrice;
         this.minBet = minBet;
@@ -50,12 +56,10 @@ public class Product{
         this.img = img;
         this.startDay = startDay;
         this.endDay = endDay;
-        this.status = status;
+        this.pendingStatus = pendingStatus;
+        this.approvaStatus = approvaStatus;
         this.productCatalogue = productCatalogue;
         this.user = user;
-    }
-
-    public Product() {
     }
 
     public Long getId() {
@@ -146,12 +150,20 @@ public class Product{
         this.endDay = endDay;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isPendingStatus() {
+        return pendingStatus;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setPendingStatus(boolean pendingStatus) {
+        this.pendingStatus = pendingStatus;
+    }
+
+    public boolean isApprovaStatus() {
+        return approvaStatus;
+    }
+
+    public void setApprovaStatus(boolean approvaStatus) {
+        this.approvaStatus = approvaStatus;
     }
 
     public ProductCatalogue getProductCatalogue() {
@@ -169,7 +181,4 @@ public class Product{
     public void setUser(User user) {
         this.user = user;
     }
-
-
-
 }
