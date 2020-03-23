@@ -8,9 +8,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface RegisteredProductRepository extends PagingAndSortingRepository<RegisteredProduct,Long> {
     Page<RegisteredProduct> findAllByProductNameContainingAndCurrentPriceBetweenAndProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable,String name,Long price1,Long price2, String catalogue, Date nowDay);
     Page<RegisteredProduct> findAllByProductProductCatalogueNameContainingAndProductEndDayGreaterThan(Pageable pageable, String catalogue, Date nowDay);
+    List<RegisteredProduct> findAllByProductEndDayLessThan(Date successTime);
 }

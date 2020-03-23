@@ -100,4 +100,8 @@ public class RegisteredProductServiceImpl implements RegisteredProductService {
         images.forEach(image -> imageUrl.add(image.getUrl()));
         return imageUrl;
     }
+    @Override
+    public List<RegisteredProduct> getAllRegisterProductByEnday(Date nowDay) {
+        return registeredProductRepository.findAllByProductEndDayLessThan(nowDay);
+    }
 }

@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-
+@EnableScheduling
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("admin")
@@ -85,7 +87,6 @@ public class AdminController {
         }
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
-
     @PostMapping("user-lock")
     public ResponseEntity userlockByAdmin(@RequestBody AdminUserLockListDTO userLockListDTO) {
         if (this.userLockListService.save(userLockListDTO)) {
@@ -156,4 +157,8 @@ public class AdminController {
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
     }
+//    @Scheduled(fixedRate = 15000)
+//    public void schedue() {
+//        System.out.println("Bạn mới loading lại dữ liệu");
+//    }
 }
