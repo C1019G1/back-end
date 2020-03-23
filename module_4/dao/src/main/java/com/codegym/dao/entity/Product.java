@@ -50,25 +50,6 @@ public class Product{
     private User user;
 
 
-    public Product() {
-    }
-
-    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean pendingStatus, boolean approvaStatus, ProductCatalogue productCatalogue, User user) {
-        this.name = name;
-        this.startPrice = startPrice;
-        this.minBet = minBet;
-        this.productInfo = productInfo;
-        this.contractPhoneNumber = contractPhoneNumber;
-        this.contractAddress = contractAddress;
-        this.warranty = warranty;
-        this.img = img;
-        this.startDay = startDay;
-        this.endDay = endDay;
-        this.pendingStatus = pendingStatus;
-        this.approvaStatus = approvaStatus;
-        this.productCatalogue = productCatalogue;
-        this.user = user;
-    }
 
     public Product() {
         //constructor
@@ -202,8 +183,8 @@ public class Product{
         productInforDTO.setImages(this.images);
         productInforDTO.setStartDay(this.startDay);
         productInforDTO.setEndDay(this.endDay);
-        productInforDTO.setPending_status(this.pending_status);
-        productInforDTO.setApprova_status(this.approva_status);
+        productInforDTO.setPending_status(this.pendingStatus);
+        productInforDTO.setApprova_status(this.approvaStatus);
         productInforDTO.setIdUser(this.user.getId());
         productInforDTO.setUserName(this.user.getUserName());
         productInforDTO.setFullName(this.user.getUserProfile().getFullName());
