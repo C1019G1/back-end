@@ -1,7 +1,10 @@
 package com.codegym.dao.entity;
 
+import com.codegym.dao.DTO.ProductInforDTO;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Product{
@@ -22,8 +25,13 @@ public class Product{
     private String contractAddress;
     @Column
     private String warranty;
-    @Column
-    private String img;
+    @OneToMany
+    @JoinTable(
+            name = "product_img",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private Set<Image> images;
     @Column
     private Date startDay;
     @Column
@@ -60,6 +68,10 @@ public class Product{
         this.approvaStatus = approvaStatus;
         this.productCatalogue = productCatalogue;
         this.user = user;
+    }
+
+    public Product() {
+        //constructor
     }
 
     public Long getId() {
@@ -126,12 +138,12 @@ public class Product{
         this.warranty = warranty;
     }
 
-    public String getImg() {
-        return img;
+    public Set<Image> getImages() {
+        return images;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     public Date getStartDay() {
@@ -180,5 +192,27 @@ public class Product{
 
     public void setUser(User user) {
         this.user = user;
+    }
+    public ProductInforDTO toProductInforDTO(){
+        ProductInforDTO productInforDTO  = new ProductInforDTO();
+        productInforDTO.setId(this.id);
+        productInforDTO.setName(this.name);
+        productInforDTO.setStartPrice(this.startPrice);
+        productInforDTO.setWarranty(this.warranty);
+        productInforDTO.setImages(this.images);
+        productInforDTO.setStartDay(this.startDay);
+        productInforDTO.setEndDay(this.endDay);
+        productInforDTO.setPending_status(this.pending_status);
+        productInforDTO.setApprova_status(this.approva_status);
+        productInforDTO.setIdUser(this.user.getId());
+        productInforDTO.setUserName(this.user.getUserName());
+        productInforDTO.setFullName(this.user.getUserProfile().getFullName());
+        productInforDTO.setEmail(this.user.getUserProfile().getEmail());
+        productInforDTO.setPhone(this.user.getUserProfile().getPhone());
+        productInforDTO.setCatalogue(this.productCatalogue.getName());
+        productInforDTO.setContractPhoneNumber(this.contractPhoneNumber);
+        productInforDTO.setContractAddress(this.contractAddress);
+        productInforDTO.setProductInfo(this.productInfo);
+        return productInforDTO;
     }
 }
