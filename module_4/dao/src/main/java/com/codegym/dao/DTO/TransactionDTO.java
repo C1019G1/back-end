@@ -1,6 +1,7 @@
 package com.codegym.dao.DTO;
 
 import java.util.Date;
+import java.util.List;
 
 public class TransactionDTO {
     private Long id;
@@ -8,7 +9,7 @@ public class TransactionDTO {
     private Date period;
     private int fee;
     private Long price;
-
+    private List<String> imageURLs;
     public TransactionDTO() {
         // constructor
     }
@@ -51,5 +52,13 @@ public class TransactionDTO {
 
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public List<String> getImageURLs() {
+        return imageURLs;
+    }
+
+    public void setImageURLs(List<String> imageURLs) {
+        this.imageURLs = imageURLs;
     }
 }
