@@ -36,10 +36,10 @@ public class Product{
     private Date startDay;
     @Column
     private Date endDay;
-    @Column
-    private boolean pendingStatus = true;
-    @Column
-    private boolean approvaStatus = false;
+    @Column()
+    private boolean pending_status =true;
+    @Column()
+    private boolean approva_status = false;
 
     @ManyToOne
     @JoinColumn(name = "product_catalogue_id")
@@ -49,7 +49,21 @@ public class Product{
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    public Product(String name, Long startPrice, Long minBet, String productInfo, String contractPhoneNumber, String contractAddress, String warranty, String img, Date startDay, Date endDay, boolean pending_status, boolean approva_status, ProductCatalogue productCatalogue, User user) {
+        this.name = name;
+        this.startPrice = startPrice;
+        this.minBet = minBet;
+        this.productInfo = productInfo;
+        this.contractPhoneNumber = contractPhoneNumber;
+        this.contractAddress = contractAddress;
+        this.warranty = warranty;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.pending_status = pending_status;
+        this.approva_status = approva_status;
+        this.productCatalogue = productCatalogue;
+        this.user = user;
+    }
 
     public Product() {
         //constructor
@@ -143,20 +157,12 @@ public class Product{
         this.endDay = endDay;
     }
 
-    public boolean isPendingStatus() {
-        return pendingStatus;
+    public boolean isStatus() {
+        return this.approva_status;
     }
 
-    public void setPendingStatus(boolean pendingStatus) {
-        this.pendingStatus = pendingStatus;
-    }
-
-    public boolean isApprovaStatus() {
-        return approvaStatus;
-    }
-
-    public void setApprovaStatus(boolean approvaStatus) {
-        this.approvaStatus = approvaStatus;
+    public void setStatus(boolean status) {
+        this.approva_status = status;
     }
 
     public ProductCatalogue getProductCatalogue() {
@@ -183,8 +189,8 @@ public class Product{
         productInforDTO.setImages(this.images);
         productInforDTO.setStartDay(this.startDay);
         productInforDTO.setEndDay(this.endDay);
-        productInforDTO.setPending_status(this.pendingStatus);
-        productInforDTO.setApprova_status(this.approvaStatus);
+        productInforDTO.setPending_status(this.pending_status);
+        productInforDTO.setApprova_status(this.approva_status);
         productInforDTO.setIdUser(this.user.getId());
         productInforDTO.setUserName(this.user.getUserName());
         productInforDTO.setFullName(this.user.getUserProfile().getFullName());

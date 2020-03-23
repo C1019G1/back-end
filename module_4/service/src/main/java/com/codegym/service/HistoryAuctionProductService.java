@@ -9,5 +9,5 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface HistoryAuctionProductService {
-  Page<Product> findAuctionProductByUserId(Long userId, Pageable pageable);
+  List<Product> findAuctionProductByUserId(Long userId, Pageable pageable);
 }
