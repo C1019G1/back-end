@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.dao.DTO.ProductInforDTO;
 import com.codegym.dao.DTO.AdminUserLockListDTO;
 import com.codegym.dao.DTO.AdminUserProfileDTO;
 import com.codegym.dao.DTO.UserRegisterDTO;
@@ -25,11 +26,16 @@ public class AdminController {
     @Autowired
     UserServiceImpl userService;
     @Autowired
+    CatalogueService catalogueService;
+    @Autowired
+    ProductService productService;
+    @Autowired
     UserRankService userRankService;
     @Autowired
     UserProfileService userProfileService;
     @Autowired
     UserLockListService userLockListService;
+
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
                                                                  @RequestParam(name = "size") int size,
@@ -67,15 +73,16 @@ public class AdminController {
     public ResponseEntity<Iterable<UserRank>> getRankList() {
         return new ResponseEntity(userRankService.getAllRank(), HttpStatus.OK);
     }
+
     @PostMapping("user-register")
     public ResponseEntity userRegisterByAdmin(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
-        if(userService.checkUsernameIsExisted(userRegisterDTO.getUserName())){
+        if (userService.checkUsernameIsExisted(userRegisterDTO.getUserName())) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("Tài khoản đã tồn tại");
         }
-        if(userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())){
+        if (userProfileService.checkEmailIsExisted(userRegisterDTO.getEmail())) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("email này đã được đăng ký");
@@ -83,14 +90,74 @@ public class AdminController {
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
     @PostMapping("user-lock")
-    public ResponseEntity userlockByAdmin(@RequestBody AdminUserLockListDTO userLockListDTO){
-        if(this.userLockListService.save(userLockListDTO)){
+    public ResponseEntity userlockByAdmin(@RequestBody AdminUserLockListDTO userLockListDTO) {
+        if (this.userLockListService.save(userLockListDTO)) {
             return new ResponseEntity(HttpStatus.OK);
         } else {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("Biểu mẫu không có giá trị");
         }
+    }
+
+    @PostMapping("save-product")
+    public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
+        Product product = productInforDTO.toProduct();
+        User user = userService.findByUserName(productInforDTO.getUserName());
+        ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
+        product.setUser(user);
+        product.setProductCatalogue(productCatalogue);
+        return ResponseEntity.ok(productService.save(product));
+    }
+
+    @PostMapping("get-infor-admin")
+    public ResponseEntity getInfor(@RequestBody String userName) {
+        User user = userService.findByUserName(userName);
+        UserProfile userProfile = user.getUserProfile();
+        Object object = new Object() {
+            private Long idUser = userProfile.getId();
+            private String fullName = userProfile.getFullName();
+            private String email = userProfile.getEmail();
+            private String userName = user.getUserName();
+            private String phone = userProfile.getPhone();
+            public String getFullName() {
+                return fullName;
+            }
+            public void setFullName(String fullName) {
+                this.fullName = fullName;
+            }
+            public String getEmail() {
+                return email;
+            }
+            public void setEmail(String email) {
+                this.email = email;
+            }
+            public Long getIdUser() {
+                return idUser;
+            }
+            public void setIdUser(Long idUser) {
+                this.idUser = idUser;
+            }
+            public String getUserName() {
+                return userName;
+            }
+            public void setUserName(String userName) {
+                this.userName = userName;
+            }
+            public String getPhone() {
+                return phone;
+            }
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+        };
+        return ResponseEntity.ok(object);
+    }
+    @GetMapping("get-infor-product")
+    public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
+        System.out.println(id);
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(product.toProductInforDTO());
     }
 //    @Scheduled(fixedRate = 15000)
 //    public void schedue() {
