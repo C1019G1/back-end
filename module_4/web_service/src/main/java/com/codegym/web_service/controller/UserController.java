@@ -4,9 +4,7 @@ import com.codegym.common.RandomString;
 import com.codegym.common.SendGmailService;
 import com.codegym.dao.DTO.*;
 import com.codegym.dao.entity.*;
-import com.codegym.service.UserLockListService;
-import com.codegym.service.UserLoginHistoryService;
-import com.codegym.service.UserProfileService;
+import com.codegym.service.*;
 import com.codegym.service.ipml.UserServiceImpl;
 import com.codegym.web_service.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import java.util.Set;
 import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
-import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,7 +50,12 @@ public class UserController {
     UserLoginHistoryService userLoginHistoryService;
     @Autowired
     UserLockListService userLockListService;
-
+    @Autowired
+    CatalogueService catalogueService;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    ImageService imageService;
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -247,6 +249,76 @@ public class UserController {
         }
     }
 
+    @PostMapping("save-product")
+    public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
+        Set<Image> images = new HashSet<>();
+        for (String url : productInforDTO.getImgUrlList()) {
+            Image image = new Image();
+            image.setUrl(url);
+            images.add(imageService.save(image));
+        }
+        for (Image image: images) {
+            System.out.println(image.getUrl());
+        }
 
+
+        Product product = productInforDTO.toProduct();
+        product.setImages(images);
+        User user = userService.findByUserName(productInforDTO.getUserName());
+        ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
+        product.setProductCatalogue(productCatalogue);
+        product.setUser(user);
+        System.out.println("buoc 3");
+        return ResponseEntity.ok(productService.save(product));
+    }
+    @PostMapping("get-infor-user")
+    public ResponseEntity getInfor(@RequestBody String userName) {
+        User user = userService.findByUserName(userName);
+        UserProfile userProfile = user.getUserProfile();
+        Object object = new Object() {
+            private Long idUser = userProfile.getId();
+            private String fullName = userProfile.getFullName();
+            private String email = userProfile.getEmail();
+            private String userName = user.getUserName();
+            private String phone = userProfile.getPhone();
+            public String getFullName() {
+                return fullName;
+            }
+            public void setFullName(String fullName) {
+                this.fullName = fullName;
+            }
+            public String getEmail() {
+                return email;
+            }
+            public void setEmail(String email) {
+                this.email = email;
+            }
+            public Long getIdUser() {
+                return idUser;
+            }
+            public void setIdUser(Long idUser) {
+                this.idUser = idUser;
+            }
+            public String getUserName() {
+                return userName;
+            }
+            public void setUserName(String userName) {
+                this.userName = userName;
+            }
+            public String getPhone() {
+                return phone;
+            }
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+        };
+        return ResponseEntity.ok(object);
+    }
+    @GetMapping("get-infor-product")
+    public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
+        System.out.println(id);
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(product.toProductInforDTO());
+    }
 }
 
