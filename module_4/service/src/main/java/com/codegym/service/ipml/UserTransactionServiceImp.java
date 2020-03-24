@@ -2,10 +2,7 @@ package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.TransactionDTO;
 import com.codegym.dao.DTO.UserTransactionDTO;
-import com.codegym.dao.entity.Auction;
-import com.codegym.dao.entity.Image;
-import com.codegym.dao.entity.RegisteredProduct;
-import com.codegym.dao.entity.UserTransaction;
+import com.codegym.dao.entity.*;
 import com.codegym.dao.repository.AuctionRepository;
 import com.codegym.dao.repository.RegisteredProductRepository;
 import com.codegym.dao.repository.UserTransactionRepository;
@@ -16,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserTransactionServiceImp implements UserTransactionService {
@@ -76,13 +72,16 @@ public class UserTransactionServiceImp implements UserTransactionService {
             transactionDTO.setId(userTransaction.getId());
             transactionDTO.setFee(userTransaction.getFee());
             transactionDTO.setPeriod(userTransaction.getPeriod());
-            transactionDTO.setProductName(userTransaction.getAuction().getRegisteredProduct().getProduct().getName());
             transactionDTO.setPrice(userTransaction.getAuction().getBetPrice());
-            Set<Image> imageList= userTransaction.getAuction().getRegisteredProduct().getProduct().getImages();
-            List<String> imageURLs = imageList.stream()
-                    .map(Image::getUrl)
-                    .collect(Collectors.toList());
-            transactionDTO.setImageURLs(imageURLs);
+            Product product = userTransaction.getAuction().getRegisteredProduct().getProduct();
+            transactionDTO.setProductId(userTransaction.getAuction().getRegisteredProduct().getId());
+            transactionDTO.setProductName(product.getName());
+            transactionDTO.setImageURLs(product.getImgaeURLs());
+            transactionDTO.setProductInfo(product.getProductInfo());
+            transactionDTO.setContractAddress(product.getContractAddress());
+            transactionDTO.setContractPhoneNumber(product.getContractPhoneNumber());
+            transactionDTO.setWarranty(product.getWarranty());
+            transactionDTO.setProductCatalogue(product.getProductCatalogue());
             transactionDTOList.add(transactionDTO);
         }
         return transactionDTOList;

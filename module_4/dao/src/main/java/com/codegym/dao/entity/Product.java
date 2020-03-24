@@ -4,7 +4,9 @@ import com.codegym.dao.DTO.ProductInforDTO;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Product{
@@ -195,5 +197,10 @@ public class Product{
         productInforDTO.setContractAddress(this.contractAddress);
         productInforDTO.setProductInfo(this.productInfo);
         return productInforDTO;
+    }
+    public List<String> getImgaeURLs(){
+        return this.images.stream()
+                .map(Image::getUrl)
+                .collect(Collectors.toList());
     }
 }
