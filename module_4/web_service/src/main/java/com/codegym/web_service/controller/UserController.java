@@ -54,6 +54,8 @@ public class UserController {
     CatalogueService catalogueService;
     @Autowired
     ProductService productService;
+    @Autowired
+    ImageService imageService;
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -249,7 +251,19 @@ public class UserController {
 
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
+        Set<Image> images = new HashSet<>();
+        for (String url : productInforDTO.getImgUrlList()) {
+            Image image = new Image();
+            image.setUrl(url);
+            images.add(imageService.save(image));
+        }
+        for (Image image: images) {
+            System.out.println(image.getUrl());
+        }
+
+
         Product product = productInforDTO.toProduct();
+        product.setImages(images);
         User user = userService.findByUserName(productInforDTO.getUserName());
         ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
         product.setProductCatalogue(productCatalogue);
