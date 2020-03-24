@@ -56,6 +56,9 @@ public class UserController {
     ProductService productService;
     @Autowired
     ImageService imageService;
+    @Autowired
+    UserTransactionService userTransactionService;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -249,6 +252,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/cart")
+    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
+        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
+        if (transactionDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
+    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
         Set<Image> images = new HashSet<>();

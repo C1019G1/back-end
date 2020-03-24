@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface UserTransactionRepository extends PagingAndSortingRepository<UserTransaction, Long> {
@@ -17,4 +18,5 @@ public interface UserTransactionRepository extends PagingAndSortingRepository<Us
     Page<UserTransaction> findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetweenAndStatus(Pageable pageable,String buyer,String seller,String productName,Date firstDate,Date lastDate,Boolean status);
 
     Page<UserTransaction> findAllByAuctionRegisteredProductProductEndDayBetween(Pageable pageable, Date firstDate, Date lastDate );
+    List<UserTransaction>findAllByAuction_UserUserNameAndStatusFalse(String userName);
 }
