@@ -3,6 +3,7 @@ package com.codegym.web_service.controller;
 import com.codegym.dao.DTO.HistoryAuctionProductDTO;
 import com.codegym.dao.DTO.HistoryRegisterProductDTO;
 import com.codegym.dao.entity.Product;
+import com.codegym.service.CatalogueService;
 import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.HistoryRegisterProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class ProductController {
 
     @Autowired
     private HistoryAuctionProductService historyAuctionProductService;
-
+    @Autowired
+    private CatalogueService catalogueService;
     //History Register Product
     @GetMapping("/reg")
     public ResponseEntity<?> getRegisterProductForUser(
@@ -68,5 +70,9 @@ public class ProductController {
             return AuctionProduct;
         });
         return new ResponseEntity<>(listProductDto.getContent(), HttpStatus.OK);
+    }
+    @GetMapping("get-all-catalogue")
+    public ResponseEntity getAllProduct() {
+        return ResponseEntity.ok(catalogueService.getAll());
     }
 }

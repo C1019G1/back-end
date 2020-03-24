@@ -5,6 +5,7 @@ import com.codegym.dao.entity.Product;
 
 import javax.persistence.Column;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class ProductInforDTO {
@@ -24,6 +25,15 @@ public class ProductInforDTO {
     private String fullName;
     private String email;
     private String phone;
+    private List<String> imgUrlList;
+
+    public List<String> getImgUrlList() {
+        return imgUrlList;
+    }
+
+    public void setImgUrlList(List<String> imgUrlList) {
+        this.imgUrlList = imgUrlList;
+    }
 
     public Long getIdUser() {
         return idUser;
