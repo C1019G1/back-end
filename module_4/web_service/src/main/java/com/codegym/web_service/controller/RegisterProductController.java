@@ -68,7 +68,7 @@ public class RegisterProductController {
     }
 
     @GetMapping(value = "/current-price")
-    public ResponseEntity getCurrentPriceByProductId(@RequestParam("id") Long registeredProductId) {
+    public ResponseEntity<?> getCurrentPriceByProductId(@RequestParam("id") Long registeredProductId) {
         Auction auction = auctionService.findCurrentPriceById(registeredProductId);
         if (auction != null) {
             return new ResponseEntity<>(auction.getBetPrice(), HttpStatus.OK);
@@ -121,15 +121,11 @@ public class RegisterProductController {
                                                @RequestParam("productName") String productName,
                                                @RequestParam("firstDateSt") String firstDateSt,
                                                @RequestParam("lastDateSt") String lastDateSt,
-                                               @RequestParam( "status") String status) throws ParseException {
-        System.out.println("---------------------------page="+page+ "size:"+size+"fee="+buyer);
-
+                                               @RequestParam("status") Boolean status) throws ParseException {
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
         Date firstDate = dateFormat1.parse(firstDateSt);
         Date lastDate = dateFormat2.parse(lastDateSt);
-        System.out.println(firstDate + "---------------------"+lastDate);
-        System.out.println("---------------------------------status:"+status);
         Page<UserTransactionDTO> userTransactionDTOS = userTransactionService.searchTransaction(PageRequest.of(page, size),buyer,seller,productName,firstDate,lastDate,status);
         return new ResponseEntity<>(userTransactionDTOS, HttpStatus.OK);
     }
@@ -139,4 +135,10 @@ public class RegisterProductController {
         userTransactionService.deleteUserTransaction(id);
         return new ResponseEntity<>("ok",HttpStatus.OK);
     }
+    //    @Scheduled(fixedRate = 15000)
+//    @GetMapping(value = "schedule")
+//    public ResponseEntity<?> schedue() {
+//        System.out.println("Xin chào bạn");
+//        return new ResponseEntity<>("thành công",HttpStatus.OK);
+//    }
 }

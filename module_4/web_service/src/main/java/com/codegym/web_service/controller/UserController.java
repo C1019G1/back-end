@@ -333,10 +333,10 @@ public class UserController {
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
     }
+    //chánh
     @GetMapping(value = "/user/get-infor-user", params = "userName")
     public ResponseEntity<?> getInfoUser(@RequestParam ("userName") String userName) {
         BuyerDTO buyerDTO =userService.getUserProfileByUserName(userName);
-        System.out.println("----------------------------id:"+userName);
         return new ResponseEntity<>(buyerDTO,HttpStatus.OK);
     }
     @GetMapping(value = "user/sentEmail", params = {"email","productName","priceTotal"})
