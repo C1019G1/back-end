@@ -1,5 +1,6 @@
 package com.codegym.service.ipml;
 
+import com.codegym.dao.DTO.TransactionDTO;
 import com.codegym.dao.DTO.UserTransactionDTO;
 import com.codegym.dao.entity.Auction;
 import com.codegym.dao.entity.RegisteredProduct;
@@ -110,5 +111,15 @@ public class UserTransactionServiceImp implements UserTransactionService {
     @Override
     public void deleteUserTransaction(Long idUserTransaction) {
         userTransactionRepository.deleteById(idUserTransaction);
+    }
+
+    @Override
+    public Page<UserTransactionDTO> searchTransaction(Pageable pageable, String buyer, String seller, String productName, Date firstDate, Date lastDate, Boolean status) {
+        return null;
+    }
+
+    @Override
+    public List<TransactionDTO> getAllByUser(String userName) {
+        return null;
     }
 }
