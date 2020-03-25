@@ -1,5 +1,6 @@
 package com.codegym.web_service.controller;
 
+import com.codegym.dao.DTO.AdminProductManagerDTO;
 import com.codegym.dao.DTO.ProductInforDTO;
 import com.codegym.dao.DTO.AdminUserLockListDTO;
 import com.codegym.dao.DTO.AdminUserProfileDTO;
@@ -33,6 +34,8 @@ public class AdminController {
     UserProfileService userProfileService;
     @Autowired
     UserLockListService userLockListService;
+    @Autowired
+    AdminProductManagerService adminProductManagerService;
 
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
@@ -160,5 +163,24 @@ public class AdminController {
 //    @Scheduled(fixedRate = 15000)
 //    public void schedue() {
 //        System.out.println("Bạn mới loading lại dữ liệu");
+//    }
+
+//    @GetMapping("prod-manager")
+//    public ResponseEntity<?> getAllProductManager(@RequestParam("page") int page,
+//                                                     @RequestParam("size") int size) {
+//        Page<AdminProductManagerDTO> adminProductManagerDTOS = adminProductManagerService.getAllProduct(PageRequest.of(page, size));
+//        return new ResponseEntity<>(adminProductManagerDTOS.getContent(), HttpStatus.OK);
+//    }
+//
+//    @GetMapping (value = "/search", params = {"page","size","name","catalogue","userName","startPrice","status"})
+//    public ResponseEntity<?> getAllProductByNameProductAndCatalogueAndUserNameAndStartPriceAndStatus(@RequestParam("page") int page,
+//                                                                         @RequestParam("size") int size,
+//                                                                         @RequestParam ("nameProduct") String nameProduct,
+//                                                                         @RequestParam ("catalogue") ProductCatalogue catalogue,
+//                                                                         @RequestParam ("userName") String userName,
+//                                                                         @RequestParam ("startPrice") Long startPrice,
+//                                                                         @RequestParam ("status") Boolean status) {
+//        Page<AdminProductManagerDTO> adminProductManagerDTOS = adminProductManagerService.getAllProductByNameProductAndCatalogueAndUserNameAndStartPriceAndStatus(nameProduct,catalogue,userName,startPrice,status,PageRequest.of(page, size));
+//        return new ResponseEntity<>(adminProductManagerDTOS.getContent(), HttpStatus.OK);
 //    }
 }
