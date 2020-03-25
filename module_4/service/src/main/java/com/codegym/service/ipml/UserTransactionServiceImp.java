@@ -32,7 +32,6 @@ public class UserTransactionServiceImp implements UserTransactionService {
         List<RegisteredProduct> registeredProductList =registeredProductRepository.findAllByProductEndDayLessThan(nowDay);
         for (RegisteredProduct registeredProduct: registeredProductList){
             Long registerProductId = registeredProduct.getId();
-
             Date endDay = registeredProduct.getProduct().getEndDay();
             Calendar endDayCalendar = Calendar.getInstance();                       // khởi tạo
             endDayCalendar.setTime(endDay);                                        // chuyển Date sang kiểu Caladar
@@ -77,9 +76,18 @@ public class UserTransactionServiceImp implements UserTransactionService {
     }
 
     @Override
-    public Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName, Date firstDate, Date lastDate,Boolean status) {
+    public Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName, Date firstDate, Date lastDate,String status) {
         Page<UserTransactionDTO> userTransactionDTOS;
-        Page<UserTransaction> userTransactions = userTransactionRepository.findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetweenAndStatus(pageable,buyer,seller,productName,firstDate,lastDate,status);
+        Page<UserTransaction> userTransactions = null;
+        switch (status){
+            case "": userTransactions = userTransactionRepository.findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetween(pageable,buyer,seller,productName,firstDate,lastDate);
+                break;
+            case "0":userTransactions = userTransactionRepository.findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetweenAndStatus(pageable,buyer,seller,productName,firstDate,lastDate,false);
+                break;
+            case "1":userTransactions = userTransactionRepository.findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetweenAndStatus(pageable,buyer,seller,productName,firstDate,lastDate,true);
+                break;
+            default:
+        }
         userTransactionDTOS = userTransactions.map(userTransaction -> {
             UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
             userTransactionDTO.setId(userTransaction.getId());
@@ -91,12 +99,17 @@ public class UserTransactionServiceImp implements UserTransactionService {
             userTransactionDTO.setPrice(userTransaction.getAuction().getBetPrice());
             userTransactionDTO.setFee(userTransaction.getFee());
             if(userTransaction.isStatus()) {
-                userTransactionDTO.setStatus("Thành công");
+                userTransactionDTO.setStatus("Đã thanh toán");
             }else {
                 userTransactionDTO.setStatus("Chưa thanh toán");
             }
             return userTransactionDTO;
         });
         return userTransactionDTOS;
+    }
+
+    @Override
+    public void deleteUserTransaction(Long idUserTransaction) {
+        userTransactionRepository.deleteById(idUserTransaction);
     }
 }

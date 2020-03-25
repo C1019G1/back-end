@@ -5,6 +5,7 @@ import com.codegym.dao.DTO.HistoryRegisterProductDTO;
 import com.codegym.dao.entity.Product;
 import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.HistoryRegisterProductsService;
+import com.codegym.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,8 @@ public class ProductController {
 
     @Autowired
     private HistoryAuctionProductService historyAuctionProductService;
-
+    @Autowired
+    private ProductService productService;
     //History Register Product
     @GetMapping("/reg")
     public ResponseEntity<?> getRegisterProductForUser(
@@ -75,5 +77,11 @@ public class ProductController {
             listProductDto.add(AuctionProduct);
         }
         return new ResponseEntity<>(listProductDto, HttpStatus.OK);
+    }
+    @GetMapping("/getUserName") // Chánh dùng
+    public ResponseEntity<?> getNameUserByProductId(
+            @RequestParam("productId") Long productId) {
+        String userName = productService.getNameUserByProductId(productId);
+        return new ResponseEntity<>(userName, HttpStatus.OK);
     }
 }

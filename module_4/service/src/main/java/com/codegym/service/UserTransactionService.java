@@ -11,5 +11,7 @@ public interface UserTransactionService {
     void autoLoadingUserTransaction();
     Page<UserTransactionDTO> getAllTransaction(Pageable pageable);
 
-    Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName,Date firstDate, Date lastDate,Boolean status);
+    Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName,Date firstDate, Date lastDate,String status);
+
+    void deleteUserTransaction(Long idUserTransaction);
 }

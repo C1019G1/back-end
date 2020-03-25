@@ -4,11 +4,13 @@ import com.codegym.dao.DTO.AuctionDTO;
 import com.codegym.dao.DTO.RegisteredProductDTO;
 import com.codegym.dao.DTO.RegisteredProductDetailDTO;
 import com.codegym.dao.DTO.UserTransactionDTO;
+import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.entity.UserTransaction;
 import com.codegym.dao.entity.Auction;
 import com.codegym.service.RegisteredProductService;
 import com.codegym.service.AuctionService;
 import com.codegym.service.UserTransactionService;
+import com.codegym.service.ipml.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,8 @@ public class RegisterProductController {
 
     @Autowired
     UserTransactionService userTransactionService;
+    @Autowired
+    UserServiceImpl userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getByIdRegisterProduct(@PathVariable Long id) {
@@ -118,7 +122,7 @@ public class RegisterProductController {
                                                @RequestParam("productName") String productName,
                                                @RequestParam("firstDateSt") String firstDateSt,
                                                @RequestParam("lastDateSt") String lastDateSt,
-                                               @RequestParam("status") Boolean status) throws ParseException {
+                                               @RequestParam( "status") String status) throws ParseException {
         System.out.println("---------------------------page="+page+ "size:"+size+"fee="+buyer);
 
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
@@ -126,7 +130,25 @@ public class RegisterProductController {
         Date firstDate = dateFormat1.parse(firstDateSt);
         Date lastDate = dateFormat2.parse(lastDateSt);
         System.out.println(firstDate + "---------------------"+lastDate);
+        System.out.println("---------------------------------status:"+status);
         Page<UserTransactionDTO> userTransactionDTOS = userTransactionService.searchTransaction(PageRequest.of(page, size),buyer,seller,productName,firstDate,lastDate,status);
-        return new ResponseEntity<>(userTransactionDTOS.getContent(), HttpStatus.OK);
+        return new ResponseEntity<>(userTransactionDTOS, HttpStatus.OK);
     }
+//    @PostMapping(value = "/transaction-delete")
+//    public ResponseEntity<?> deleteTransaction(@RequestBody UserTransactionDTO userTransactionDTO) {
+//        System.out.println("----------------------------id:"+userTransactionDTO.getId());
+//        return new ResponseEntity<>("OKeee",HttpStatus.OK);
+//    }
+    @GetMapping(value = "/transaction-delete",params = "id")
+    public ResponseEntity<?> deleteTransaction1(@RequestParam ("id") Long id) {
+        System.out.println("----------------------------id:"+id);
+        userTransactionService.deleteUserTransaction(id);
+        return new ResponseEntity<>("ôkkookokoo",HttpStatus.OK);
+    }
+//    @GetMapping(value = "/get-infor-user", params = "userName")
+////    public ResponseEntity<?> getInfoUser(@RequestParam ("userName") String userName) {
+////        UserProfile userProfile =userService.getUserProfileByUserName(userName);
+////        System.out.println("----------------------------id:"+userName);
+////        return new ResponseEntity<>(userProfile,HttpStatus.OK);
+////    }
 }

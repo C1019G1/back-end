@@ -15,6 +15,8 @@ public interface UserTransactionRepository extends PagingAndSortingRepository<Us
     UserTransaction findByAuction(Auction auction); // Để kiểm tra có tồn tại bản nghi trước khi loading vào bảng
 
     Page<UserTransaction> findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetweenAndStatus(Pageable pageable,String buyer,String seller,String productName,Date firstDate,Date lastDate,Boolean status);
+    Page<UserTransaction> findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndAuctionRegisteredProductProductEndDayBetween(Pageable pageable,String buyer,String seller,String productName,Date firstDate,Date lastDate);
+    Page<UserTransaction> findAllByAuctionUserUserProfileFullNameContainingAndAuctionRegisteredProductProductUserUserProfileFullNameContainingAndAuctionRegisteredProductProductNameContainingAndStatus(Pageable pageable,String buyer,String seller,String productName,Boolean status);
 
     Page<UserTransaction> findAllByAuctionRegisteredProductProductEndDayBetween(Pageable pageable, Date firstDate, Date lastDate );
 }

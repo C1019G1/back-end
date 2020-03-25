@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.swing.plaf.IconUIResource;
 import java.util.Date;
 import java.util.HashSet;
@@ -245,6 +246,23 @@ public class UserController {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Thông tin tài khoản không chính xác");
         }
+    }
+    @GetMapping(value = "/user/get-infor-user", params = "userName")
+    public ResponseEntity<?> getInfoUser(@RequestParam ("userName") String userName) {
+        BuyerDTO buyerDTO =userService.getUserProfileByUserName(userName);
+        System.out.println("----------------------------id:"+userName);
+        return new ResponseEntity<>(buyerDTO,HttpStatus.OK);
+    }
+    @GetMapping(value = "user/sentEmail", params = {"email","productName","priceTotal"})
+    public ResponseEntity<?> sendEmail(@RequestParam ("email") String email,
+                                       @RequestParam ("productName") String productName,
+                                       @RequestParam ("priceTotal") int priceTotal) throws MessagingException {
+       SendGmailService sendGmailService =new SendGmailService();
+       sendGmailService.setReceiverMail(email);
+       sendGmailService.setTitle("Xác nhận thông tin thanh toán sản phầm đấu giá trên Website:daugia.com");
+       sendGmailService.setContent("Bạn đã thanh toán sản phẩm: "+productName+". Với giá thanh toán cho sản phẩm là: "+priceTotal+ " VNĐ");
+       sendGmailService.sendMail();
+        return new ResponseEntity<>("Gửi mail thành công",HttpStatus.OK);
     }
 }
 
