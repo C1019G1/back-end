@@ -18,6 +18,7 @@ public class TransactionDTO {
     private String contractPhoneNumber;
     private String contractAddress;
     private String warranty;
+    private String seller;
     public TransactionDTO() {
         // constructor
     }
@@ -116,5 +117,13 @@ public class TransactionDTO {
 
     public void setProductCatalogue(ProductCatalogue productCatalogue) {
         this.productCatalogue = productCatalogue;
+    }
+
+    public String getSeller() {
+        return seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
     }
 }
