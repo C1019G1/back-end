@@ -342,7 +342,7 @@ public class UserController {
     @GetMapping(value = "user/sentEmail", params = {"email","productName","priceTotal"})
     public ResponseEntity<?> sendEmail(@RequestParam ("email") String email,
                                        @RequestParam ("productName") String productName,
-                                       @RequestParam ("priceTotal") int priceTotal) throws MessagingException {
+                                       @RequestParam ("priceTotal") Long priceTotal) throws MessagingException {
        SendGmailService sendGmailService =new SendGmailService();
        sendGmailService.setReceiverMail(email);
        sendGmailService.setTitle("Xác nhận thông tin thanh toán sản phầm đấu giá trên Website:daugia.com");
