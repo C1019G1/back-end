@@ -19,4 +19,15 @@ public class ProductServiceImpl implements ProductService {
     public Product findById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public String getNameUserByProductId(Long productId) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product!=null){
+            return product.getUser().getUserProfile().getFullName();
+        }else {
+            return "Sản phẩm xác định người đăng";
+        }
+
+    }
 }

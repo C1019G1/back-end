@@ -3,14 +3,19 @@ package com.codegym.web_service.controller;
 import com.codegym.dao.DTO.HistoryAuctionProductDTO;
 import com.codegym.dao.DTO.HistoryRegisterProductDTO;
 import com.codegym.dao.entity.Product;
+import com.codegym.service.CatalogueService;
 import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.HistoryRegisterProductsService;
+import com.codegym.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
@@ -22,7 +27,10 @@ public class ProductController {
 
     @Autowired
     private HistoryAuctionProductService historyAuctionProductService;
-
+    @Autowired
+    private CatalogueService catalogueService;
+    @Autowired
+    private ProductService productService;
     //History Register Product
     @GetMapping("/reg")
     public ResponseEntity<?> getRegisterProductForUser(
@@ -31,6 +39,8 @@ public class ProductController {
             @RequestParam("size") int size
             ) {
        Page<Product> listProduct = historyRegisterProductsService.findProductByUserId(PageRequest.of(page, size),userId);
+        System.out.println("------------------------------------------------------------ " + userId );
+        System.out.println(listProduct.getContent());
        Page<HistoryRegisterProductDTO> listProductDto = listProduct.map(product -> {
             HistoryRegisterProductDTO ProductDto = new HistoryRegisterProductDTO();
             ProductDto.setId(product.getId());
@@ -68,5 +78,15 @@ public class ProductController {
             return AuctionProduct;
         });
         return new ResponseEntity<>(listProductDto.getContent(), HttpStatus.OK);
+    }
+    @GetMapping("get-all-catalogue")
+    public ResponseEntity getAllProduct() {
+        return ResponseEntity.ok(catalogueService.getAll());
+    }
+    @GetMapping("/getUserName") // Chánh dùng
+    public ResponseEntity<?> getNameUserByProductId(
+            @RequestParam("productId") Long productId) {
+        String userName = productService.getNameUserByProductId(productId);
+        return new ResponseEntity<>(userName, HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.codegym.service.ipml;
 
 import com.codegym.dao.DTO.AdminUserProfileDTO;
+import com.codegym.dao.DTO.BuyerDTO;
 import com.codegym.dao.DTO.UserRegisterDTO;
 import com.codegym.dao.entity.Role;
 import com.codegym.dao.entity.User;
@@ -139,5 +140,17 @@ public class UserServiceImpl implements UserDetailsService {
     }
     public boolean checkUsernameIsExisted(String username){
         return userRepository.findByUserName(username)!=null;
+    }
+
+    public BuyerDTO getUserProfileByUserName(String userName) {
+        User user = userRepository.findByUserName(userName);
+        UserProfile userProfile = user.getUserProfile();
+        BuyerDTO buyerDTO = new BuyerDTO();
+        buyerDTO.setIdBuyer(userProfile.getId());
+        buyerDTO.setBuyerName(userProfile.getFullName());
+        buyerDTO.setBuyerAddress(userProfile.getAddress());
+        buyerDTO.setBuyerEmail(userProfile.getEmail());
+        buyerDTO.setBuyerPhoneNumber(userProfile.getPhone());
+        return buyerDTO;
     }
 }

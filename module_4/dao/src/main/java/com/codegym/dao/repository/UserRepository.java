@@ -1,6 +1,7 @@
 package com.codegym.dao.repository;
 
 import com.codegym.dao.entity.User;
+import com.codegym.dao.entity.UserProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
