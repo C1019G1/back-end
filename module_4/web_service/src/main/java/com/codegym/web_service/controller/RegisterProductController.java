@@ -121,7 +121,7 @@ public class RegisterProductController {
                                                @RequestParam("productName") String productName,
                                                @RequestParam("firstDateSt") String firstDateSt,
                                                @RequestParam("lastDateSt") String lastDateSt,
-                                               @RequestParam("status") Boolean status) throws ParseException {
+                                               @RequestParam("status") String status) throws ParseException {
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
         Date firstDate = dateFormat1.parse(firstDateSt);
