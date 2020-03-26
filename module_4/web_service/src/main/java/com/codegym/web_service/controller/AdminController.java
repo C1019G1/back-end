@@ -17,6 +17,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @EnableScheduling
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -36,6 +39,8 @@ public class AdminController {
     UserLockListService userLockListService;
     @Autowired
     AdminProductManagerService adminProductManagerService;
+    @Autowired
+    ImageService imageService;
 
     @GetMapping("user-list")
     public ResponseEntity<Page<AdminUserProfileDTO>> getUserList(@RequestParam(name = "page") int page,
@@ -90,6 +95,7 @@ public class AdminController {
         }
         return ResponseEntity.ok(userService.save(userRegisterDTO));
     }
+
     @PostMapping("user-lock")
     public ResponseEntity userlockByAdmin(@RequestBody AdminUserLockListDTO userLockListDTO) {
         if (this.userLockListService.save(userLockListDTO)) {
@@ -103,7 +109,14 @@ public class AdminController {
 
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
+        Set<Image> images = productInforDTO.getImages();
+        for (String url : productInforDTO.getImgUrlList()) {
+            Image image = new Image();
+            image.setUrl(url);
+            images.add(imageService.save(image));
+        }
         Product product = productInforDTO.toProduct();
+        product.setImages(images);
         User user = userService.findByUserName(productInforDTO.getUserName());
         ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
         product.setUser(user);
@@ -121,42 +134,52 @@ public class AdminController {
             private String email = userProfile.getEmail();
             private String userName = user.getUserName();
             private String phone = userProfile.getPhone();
+
             public String getFullName() {
                 return fullName;
             }
+
             public void setFullName(String fullName) {
                 this.fullName = fullName;
             }
+
             public String getEmail() {
                 return email;
             }
+
             public void setEmail(String email) {
                 this.email = email;
             }
+
             public Long getIdUser() {
                 return idUser;
             }
+
             public void setIdUser(Long idUser) {
                 this.idUser = idUser;
             }
+
             public String getUserName() {
                 return userName;
             }
+
             public void setUserName(String userName) {
                 this.userName = userName;
             }
+
             public String getPhone() {
                 return phone;
             }
+
             public void setPhone(String phone) {
                 this.phone = phone;
             }
         };
         return ResponseEntity.ok(object);
     }
+
     @GetMapping("get-infor-product")
     public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
-        System.out.println(id);
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
     }

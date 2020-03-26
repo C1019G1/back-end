@@ -3,7 +3,6 @@ package com.codegym.dao.DTO;
 import com.codegym.dao.entity.Image;
 import com.codegym.dao.entity.Product;
 
-import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;

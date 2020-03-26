@@ -3,6 +3,7 @@ package com.codegym.dao.entity;
 import com.codegym.dao.DTO.ProductInforDTO;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -196,6 +197,11 @@ public class Product{
         productInforDTO.setContractPhoneNumber(this.contractPhoneNumber);
         productInforDTO.setContractAddress(this.contractAddress);
         productInforDTO.setProductInfo(this.productInfo);
+        List<String> imgUrlList = new ArrayList();
+        for (Image image : this.images) {
+            imgUrlList.add(image.getUrl());
+        }
+        productInforDTO.setImgUrlList(imgUrlList);
         return productInforDTO;
     }
     public List<String> getImgaeURLs(){
