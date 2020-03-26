@@ -7,11 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-   Page<Product> findAllByNameContainingAndProductCatalogueContainingAndUserUserNameContainingAndStartPriceContainingAndPendingStatusTrue(String name, ProductCatalogue productCatalogue, String user_userName, Long startPrice, Pageable pageable);
+   Page<Product> findAllByNameContainingAndProductCatalogueNameContainingAndUserUserNameContainingAndStartPriceBetweenAndPendingStatusTrue(String name, String catalogueName, String userName, Long startPrice1,Long startPrice2, Pageable pageable);
 }
 //(String name, ProductCatalogue productCatalogue, String user_userName, Long startPrice, boolean ending_status, Pageable pageable)

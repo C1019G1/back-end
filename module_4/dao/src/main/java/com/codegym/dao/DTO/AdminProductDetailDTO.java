@@ -18,19 +18,6 @@ public class AdminProductDetailDTO {
     public AdminProductDetailDTO() {
     }
 
-    public AdminProductDetailDTO(String nameProduct, Long idUser, String username, String email, String catalogue, Long startPrice, Long minBet, String img, Date startDay, Date endDay, String productInfo) {
-        this.nameProduct = nameProduct;
-        this.idUser = idUser;
-        this.username = username;
-        this.email = email;
-        this.catalogue = catalogue;
-        this.startPrice = startPrice;
-        this.minBet = minBet;
-        this.img = img;
-        this.startDay = startDay;
-        this.endDay = endDay;
-        this.productInfo = productInfo;
-    }
 
     public String getNameProduct() {
         return nameProduct;
