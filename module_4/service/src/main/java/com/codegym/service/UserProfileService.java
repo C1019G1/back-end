@@ -10,5 +10,4 @@ public interface UserProfileService {
    boolean checkEmailIsExisted(String email);
    UserProfile findById(Long id);
    void editUserProfile ( UserProfile userProfile);
-
 }

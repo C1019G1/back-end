@@ -16,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.swing.plaf.IconUIResource;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +26,7 @@ import java.util.Set;
 import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
+import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.UserProfileService;
 
 
@@ -49,8 +53,10 @@ public class UserController {
     ProductService productService;
     @Autowired
     ImageService imageService;
-    @PostMapping(value = "/register")
-    public ResponseEntity saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
+    @Autowired
+    UserTransactionService userTransactionService;
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
         if (userService.checkUsernameIsExisted(userRegisterDTO.getUserName())) {
             return ResponseEntity
@@ -240,6 +246,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/cart")
+    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
+        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
+        if (transactionDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
+    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
         Set<Image> images = new HashSet<>();
@@ -304,6 +318,23 @@ public class UserController {
     public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
+    }
+    //chánh
+    @GetMapping(value = "/user/get-infor-user", params = "userName")
+    public ResponseEntity<?> getInfoUser(@RequestParam ("userName") String userName) {
+        BuyerDTO buyerDTO =userService.getUserProfileByUserName(userName);
+        return new ResponseEntity<>(buyerDTO,HttpStatus.OK);
+    }
+    @GetMapping(value = "user/sentEmail", params = {"email","productName","priceTotal"})
+    public ResponseEntity<?> sendEmail(@RequestParam ("email") String email,
+                                       @RequestParam ("productName") String productName,
+                                       @RequestParam ("priceTotal") Long priceTotal) throws MessagingException {
+       SendGmailService sendGmailService =new SendGmailService();
+       sendGmailService.setReceiverMail(email);
+       sendGmailService.setTitle("Xác nhận thông tin thanh toán sản phầm đấu giá trên Website:daugia.com");
+       sendGmailService.setContent("Bạn đã thanh toán sản phẩm: "+productName+". Với giá thanh toán cho sản phẩm là: "+priceTotal+ " VNĐ");
+       sendGmailService.sendMail();
+        return new ResponseEntity<>("Gửi mail thành công",HttpStatus.OK);
     }
 }
 
