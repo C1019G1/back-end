@@ -14,8 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.plaf.IconUIResource;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +28,10 @@ import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
 import com.codegym.service.UserProfileService;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
@@ -51,6 +58,11 @@ public class UserController {
     ImageService imageService;
     @PostMapping(value = "/register")
     public ResponseEntity saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
+    @Autowired
+    UserTransactionService userTransactionService;
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
         if (userService.checkUsernameIsExisted(userRegisterDTO.getUserName())) {
             return ResponseEntity
@@ -240,6 +252,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/cart")
+    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
+        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
+        if (transactionDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
+    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
         Set<Image> images = new HashSet<>();
@@ -302,6 +322,7 @@ public class UserController {
     }
     @GetMapping("get-infor-product")
     public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
+        System.out.println(id);
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
     }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Product{
@@ -202,5 +203,10 @@ public class Product{
         }
         productInforDTO.setImgUrlList(imgUrlList);
         return productInforDTO;
+    }
+    public List<String> getImgaeURLs(){
+        return this.images.stream()
+                .map(Image::getUrl)
+                .collect(Collectors.toList());
     }
 }
