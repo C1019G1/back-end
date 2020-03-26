@@ -93,32 +93,33 @@ public class UserTransactionServiceImp implements UserTransactionService {
             transactionDTO.setContractPhoneNumber(product.getContractPhoneNumber());
             transactionDTO.setWarranty(product.getWarranty());
             transactionDTO.setProductCatalogue(product.getProductCatalogue());
+            transactionDTO.setSeller(userTransaction.getAuction().getUser().getUserProfile().getFullName());
             transactionDTOList.add(transactionDTO);
         }
         return transactionDTOList;
     }
 
-    private Page<UserTransactionDTO> getUserTransactionDTOS(Page<UserTransaction> userTransactions) {
-        Page<UserTransactionDTO> userTransactionDTOS;
-        userTransactionDTOS = userTransactions.map(userTransaction -> {
-            UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
-            userTransactionDTO.setId(userTransaction.getId());
-            userTransactionDTO.setPeriod(userTransaction.getPeriod());
-            userTransactionDTO.setSuccessTime(userTransaction.getAuction().getRegisteredProduct().getProduct().getEndDay());
-            userTransactionDTO.setSeller(userTransaction.getAuction().getRegisteredProduct().getProduct().getUser().getUserProfile().getFullName());
-            userTransactionDTO.setBuyer(userTransaction.getAuction().getUser().getUserProfile().getFullName());
-            userTransactionDTO.setProductName(userTransaction.getAuction().getRegisteredProduct().getProduct().getName());
-            userTransactionDTO.setPrice(userTransaction.getAuction().getBetPrice());
-            userTransactionDTO.setFee(userTransaction.getFee());
-            if(userTransaction.isStatus()) {
-                userTransactionDTO.setStatus("Thành công");
-            }else {
-                userTransactionDTO.setStatus("Chưa thanh toán");
-            }
-            return userTransactionDTO;
-        });
-        return userTransactionDTOS;
-    }
+//    private Page<UserTransactionDTO> getUserTransactionDTOS(Page<UserTransaction> userTransactions) {
+//        Page<UserTransactionDTO> userTransactionDTOS;
+//        userTransactionDTOS = userTransactions.map(userTransaction -> {
+//            UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
+//            userTransactionDTO.setId(userTransaction.getId());
+//            userTransactionDTO.setPeriod(userTransaction.getPeriod());
+//            userTransactionDTO.setSuccessTime(userTransaction.getAuction().getRegisteredProduct().getProduct().getEndDay());
+//            userTransactionDTO.setSeller(userTransaction.getAuction().getRegisteredProduct().getProduct().getUser().getUserProfile().getFullName());
+//            userTransactionDTO.setBuyer(userTransaction.getAuction().getUser().getUserProfile().getFullName());
+//            userTransactionDTO.setProductName(userTransaction.getAuction().getRegisteredProduct().getProduct().getName());
+//            userTransactionDTO.setPrice(userTransaction.getAuction().getBetPrice());
+//            userTransactionDTO.setFee(userTransaction.getFee());
+//            if(userTransaction.isStatus()) {
+//                userTransactionDTO.setStatus("Thành công");
+//            }else {
+//                userTransactionDTO.setStatus("Chưa thanh toán");
+//            }
+//            return userTransactionDTO;
+//        });
+//        return userTransactionDTOS;
+//    }
 
     @Override
     public Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName, Date firstDate, Date lastDate,String status) {
