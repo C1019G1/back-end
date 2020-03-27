@@ -1,6 +1,6 @@
 package com.codegym.dao.DTO;
 
-import java.util.Date;
+
 import java.util.List;
 
 public class AdminProductManagerDTO {
@@ -11,23 +11,11 @@ public class AdminProductManagerDTO {
     private Long startPrice;
     private String productInfo;
     private Boolean status;
-    private Boolean BrowseStatus;
-    private String img;
+    private List<String> img;
 
     public AdminProductManagerDTO() {
     }
 
-    public AdminProductManagerDTO(Long productId, String nameProduct, String username, String catalogue, Long startPrice, String productInfo, Boolean status, Boolean browseStatus, String img) {
-        this.productId = productId;
-        this.nameProduct = nameProduct;
-        this.username = username;
-        this.catalogue = catalogue;
-        this.startPrice = startPrice;
-        this.productInfo = productInfo;
-        this.status = status;
-        BrowseStatus = browseStatus;
-        this.img = img;
-    }
 
     public Long getProductId() {
         return productId;
@@ -85,19 +73,11 @@ public class AdminProductManagerDTO {
         this.status = status;
     }
 
-    public Boolean getBrowseStatus() {
-        return BrowseStatus;
-    }
-
-    public void setBrowseStatus(Boolean browseStatus) {
-        BrowseStatus = browseStatus;
-    }
-
-    public String getImg() {
+    public List<String> getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(List<String> img) {
         this.img = img;
     }
 }
