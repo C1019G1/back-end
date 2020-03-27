@@ -141,4 +141,10 @@ public class RegisterProductController {
 //        System.out.println("Xin chào bạn");
 //        return new ResponseEntity<>("thành công",HttpStatus.OK);
 //    }
+    @GetMapping(value = "/transaction-update")
+    public ResponseEntity updateTransaction(@RequestParam ("id") Long id) {
+        System.out.println("----------------------------id:"+id);
+        userTransactionService.updateUserTransaction(id);
+        return new ResponseEntity<>("ok",HttpStatus.OK);
+    }
 }

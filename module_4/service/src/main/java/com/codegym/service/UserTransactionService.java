@@ -18,4 +18,5 @@ public interface UserTransactionService {
     void deleteUserTransaction(Long idUserTransaction);
 //    Page<UserTransactionDTO> searchTransaction(Pageable pageable,String buyer, String seller, String productName,Date firstDate, Date lastDate,Boolean status);
     List<TransactionDTO> getAllByUser (String userName);
+    void updateUserTransaction(Long id);
 }
