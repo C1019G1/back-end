@@ -56,11 +56,6 @@ public class UserController {
     ProductService productService;
     @Autowired
     ImageService imageService;
-    @PostMapping(value = "/register")
-    public ResponseEntity saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
-    @Autowired
-    UserTransactionService userTransactionService;
-
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -78,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         UserDetails userDetails = null;
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -110,26 +105,26 @@ public class UserController {
 
     public String getMaxRoleName(String username) {
         String rolename = "ROLE_VISITOR";
-        Set<String> roleNames = new HashSet<>();
+        Set<String> role_names = new HashSet<>();
         User user = userService.findByUserName(username);
         Set<Role> roles = user.getRoles();
         for (Role role : roles) {
-            roleNames.add(role.getName());
+            role_names.add(role.getName());
         }
-        if (roleNames.contains("ROLE_USER")) {
+        if (role_names.contains("ROLE_USER")) {
             rolename = "ROLE_USER";
         }
-        if (roleNames.contains("ROLE_MEMBER")) {
+        if (role_names.contains("ROLE_MEMBER")) {
             rolename = "ROLE_MEMBER";
         }
-        if (roleNames.contains("ROLE_ADMIN")) {
+        if (role_names.contains("ROLE_ADMIN")) {
             rolename = "ROLE_ADMIN";
         }
         return rolename;
     }
 
     @PostMapping("/login-history")
-    public ResponseEntity getAllHistoryLogin(@RequestBody String username) {
+    public ResponseEntity<?> getAllHistoryLogin(@RequestBody String username) {
         User user = userService.findByUserName("admin");
         List<String> userLoginHistoryList = userLoginHistoryService.getAllLoginTime(user);
         return ResponseEntity.ok(userLoginHistoryList);
@@ -143,14 +138,14 @@ public class UserController {
 
 
     @GetMapping("getid/{username}")
-    public ResponseEntity getIdByUserName(@PathVariable("username") String username){
+    public ResponseEntity<?> getIdByUserName(@PathVariable("username") String username){
         User user =userService.findByUserName(username);
         UserProfile userProfile = userProfileService.findById(user.getId());
         return new ResponseEntity<>(userProfile, HttpStatus.OK);
     }
     //Get info to idUserProfile
     @GetMapping("/user/{id}")
-    public ResponseEntity getAllInfoUser(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getAllInfoUser(@PathVariable("id") Long id) {
         UserProfile userProfiles = userProfileService.findAllProfileUser(id);
         return new ResponseEntity<>(userProfiles, HttpStatus.OK);
     }
@@ -160,6 +155,7 @@ public class UserController {
     public ResponseEntity<UserProfile> editUserProfile(@RequestBody UserProfile userProfile, @PathVariable("id") long id) {
         UserProfile userProfiles = userProfileService.findById(id);
         if (userProfiles == null) {
+            System.out.println("User with id " + id + " not found");
             return new ResponseEntity<UserProfile>(HttpStatus.NOT_FOUND);
         }
         userProfiles.setFullName(userProfile.getFullName());
@@ -186,7 +182,7 @@ public class UserController {
 
     //save
     @PutMapping("user/{userID}")
-    public ResponseEntity getAllHistoryRegisterProducts(@PathVariable("userID") Long userID,
+    public ResponseEntity<?> getAllHistoryRegisterProducts(@PathVariable("userID") Long userID,
                                                            @RequestBody UseProfileDTO useProfileDTO
                                                            ) {
         UserProfile userProfile = new UserProfile();
@@ -208,7 +204,7 @@ public class UserController {
 
 
     @PostMapping("/change-password")
-    public ResponseEntity changePassword(@RequestBody() ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<?> changePassword(@RequestBody() ChangePasswordDTO changePasswordDTO) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(changePasswordDTO.getUsername(), changePasswordDTO.getOldPassword())
@@ -223,7 +219,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity resetPassword(@RequestBody() ResetPasswordDTO resetPasswordDTO) {
+    public ResponseEntity<?> resetPassword(@RequestBody() ResetPasswordDTO resetPasswordDTO) {
 
         try {
             User user = userService.findByUserName(resetPasswordDTO.getUserName());
@@ -231,6 +227,7 @@ public class UserController {
             if (user.getUserProfile().equals(userProfile)) {
                 RandomString randomString = new RandomString();
                 String newPassword = randomString.getAlphaNumericString(20);
+                System.out.println(newPassword);
                 user.setPassword(newPassword);
                 userService.changePassword(user.getUserName(),newPassword);
                 SendGmailService sendGmailService = new SendGmailService();
@@ -252,14 +249,6 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/cart")
-    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
-        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
-        if (transactionDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
-    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
         Set<Image> images = new HashSet<>();
@@ -268,6 +257,10 @@ public class UserController {
             image.setUrl(url);
             images.add(imageService.save(image));
         }
+        for (Image image: images) {
+            System.out.println(image.getUrl());
+        }
+
 
         Product product = productInforDTO.toProduct();
         product.setImages(images);
@@ -275,6 +268,7 @@ public class UserController {
         ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
         product.setProductCatalogue(productCatalogue);
         product.setUser(user);
+        System.out.println("buoc 3");
         return ResponseEntity.ok(productService.save(product));
     }
     @PostMapping("get-infor-user")
