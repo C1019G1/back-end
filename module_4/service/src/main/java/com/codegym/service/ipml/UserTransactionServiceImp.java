@@ -159,6 +159,14 @@ public class UserTransactionServiceImp implements UserTransactionService {
         userTransactionRepository.deleteById(idUserTransaction);
     }
 
+    @Override
+    public void updateUserTransaction(Long id) {
+      UserTransaction userTransaction =  userTransactionRepository.findById(id).orElse(null);
+      if (userTransaction!=null) {
+          userTransaction.setStatus(true);
+          userTransactionRepository.save(userTransaction);
+      }
+    }
 
 
 }

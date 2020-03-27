@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.swing.plaf.IconUIResource;
 import java.util.Date;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.Set;
 import com.codegym.dao.DTO.UseProfileDTO;
 import com.codegym.dao.entity.UserProfile;
 import com.codegym.dao.repository.UserProfileRepository;
+import com.codegym.service.HistoryAuctionProductService;
 import com.codegym.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,8 @@ public class UserController {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    UserTransactionService userTransactionService;
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -125,7 +129,7 @@ public class UserController {
     }
 
     @PostMapping("/login-history")
-    public ResponseEntity<?> getAllHistoryLogin(@RequestBody String username) {
+    public ResponseEntity getAllHistoryLogin(@RequestBody String username) {
         User user = userService.findByUserName("admin");
         List<String> userLoginHistoryList = userLoginHistoryService.getAllLoginTime(user);
         return ResponseEntity.ok(userLoginHistoryList);
@@ -204,6 +208,7 @@ public class UserController {
     }
 
 
+
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody() ChangePasswordDTO changePasswordDTO) {
         try {
@@ -220,7 +225,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody() ResetPasswordDTO resetPasswordDTO) {
+    public ResponseEntity resetPassword(@RequestBody() ResetPasswordDTO resetPasswordDTO) {
 
         try {
             User user = userService.findByUserName(resetPasswordDTO.getUserName());
@@ -228,16 +233,16 @@ public class UserController {
             if (user.getUserProfile().equals(userProfile)) {
                 RandomString randomString = new RandomString();
                 String newPassword = randomString.getAlphaNumericString(20);
-                System.out.println(newPassword);
                 user.setPassword(newPassword);
-                userService.changePassword(user.getUserName(), newPassword);
+                userService.changePassword(user.getUserName(),newPassword);
                 SendGmailService sendGmailService = new SendGmailService();
                 sendGmailService.setReceiverMail(resetPasswordDTO.getEmail());
                 sendGmailService.setTitle("Mật khẩu mới");
                 sendGmailService.setContent("mật khẩu mới của bạn là " + newPassword);
                 sendGmailService.sendMail();
                 return ResponseEntity.ok("");
-            } else {
+            }
+            else {
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body("Thông tin tài khoản không chính xác");
@@ -249,44 +254,31 @@ public class UserController {
         }
     }
 
-    //    @PostMapping("save-product")
-//    public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
-//        Set<Image> images = productInforDTO.getImages();
-//        for (String url : productInforDTO.getImgUrlList()) {
-//            Image image = new Image();
-//            image.setUrl(url);
-//            images.add(imageService.save(image));
-//        }
-//
-//        Product product = productInforDTO.toProduct();
-//        product.setImages(images);
-//        User user = userService.findByUserName(productInforDTO.getUserName());
-//        ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
-//        product.setProductCatalogue(productCatalogue);
-//        product.setUser(user);
-//        return ResponseEntity.ok(productService.save(product));
-//    }
+    @GetMapping(value = "/cart")
+    public ResponseEntity<?> getUserCart(@RequestParam("userName") String userName){
+        List<TransactionDTO> transactionDTOS= userTransactionService.getAllByUser(userName);
+        if (transactionDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(transactionDTOS,HttpStatus.OK);
+    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
-        Set<Image> images = productInforDTO.getImages();
-        if ( images == null) {
-            images = new HashSet<>();
-        }
+        Set<Image> images = new HashSet<>();
         for (String url : productInforDTO.getImgUrlList()) {
             Image image = new Image();
             image.setUrl(url);
-            image = imageService.save(image);
-            images.add(image);
+            images.add(imageService.save(image));
         }
+
         Product product = productInforDTO.toProduct();
         product.setImages(images);
         User user = userService.findByUserName(productInforDTO.getUserName());
         ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
-        product.setUser(user);
         product.setProductCatalogue(productCatalogue);
+        product.setUser(user);
         return ResponseEntity.ok(productService.save(product));
     }
-
     @PostMapping("get-infor-user")
     public ResponseEntity getInfor(@RequestBody String userName) {
         User user = userService.findByUserName(userName);
@@ -297,55 +289,60 @@ public class UserController {
             private String email = userProfile.getEmail();
             private String userName = user.getUserName();
             private String phone = userProfile.getPhone();
-
             public String getFullName() {
                 return fullName;
             }
-
             public void setFullName(String fullName) {
                 this.fullName = fullName;
             }
-
             public String getEmail() {
                 return email;
             }
-
             public void setEmail(String email) {
                 this.email = email;
             }
-
             public Long getIdUser() {
                 return idUser;
             }
-
             public void setIdUser(Long idUser) {
                 this.idUser = idUser;
             }
-
             public String getUserName() {
                 return userName;
             }
-
             public void setUserName(String userName) {
                 this.userName = userName;
             }
-
             public String getPhone() {
                 return phone;
             }
-
             public void setPhone(String phone) {
                 this.phone = phone;
             }
         };
         return ResponseEntity.ok(object);
     }
-
     @GetMapping("get-infor-product")
     public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
-        System.out.println(id);
         Product product = productService.findById(id);
         return ResponseEntity.ok(product.toProductInforDTO());
+    }
+    //chánh
+    @GetMapping(value = "/user/get-infor-user", params = "userName")
+    public ResponseEntity<?> getInfoUser(@RequestParam ("userName") String userName) {
+        BuyerDTO buyerDTO =userService.getUserProfileByUserName(userName);
+        return new ResponseEntity<>(buyerDTO,HttpStatus.OK);
+    }
+    @GetMapping(value = "user/sentEmail", params = {"email","productName","priceTotal"})
+    public ResponseEntity<?> sendEmail(@RequestParam ("email") String email,
+                                       @RequestParam ("productName") String productName,
+                                       @RequestParam ("priceTotal") Long priceTotal) throws MessagingException {
+       SendGmailService sendGmailService =new SendGmailService();
+       sendGmailService.setReceiverMail(email);
+       sendGmailService.setTitle("Xác nhận thông tin thanh toán sản phầm đấu giá trên Website:daugia.com");
+       sendGmailService.setContent("Bạn đã thanh toán sản phẩm: "+productName+". Với giá thanh toán cho sản phẩm là: "+priceTotal+ " VNĐ");
+       sendGmailService.sendMail();
+        return new ResponseEntity<>("Gửi mail thành công",HttpStatus.OK);
     }
 }
 
