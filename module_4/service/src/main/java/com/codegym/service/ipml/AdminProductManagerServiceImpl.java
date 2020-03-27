@@ -30,7 +30,7 @@ public class AdminProductManagerServiceImpl implements AdminProductManagerServic
             adminProductManagerDTO.setNameProduct(product.getName());
             adminProductManagerDTO.setCatalogue(product.getProductCatalogue().getName());
             adminProductManagerDTO.setUsername(product.getUser().getUserName());
-//            adminProductManagerDTO.setImg(product.getImages());
+            adminProductManagerDTO.setImg(product.getImgaeURLs());
             adminProductManagerDTO.setStartPrice(product.getStartPrice());
             adminProductManagerDTO.setStatus(product.isPendingStatus());
             adminProductManagerDTO.setProductInfo(product.getProductInfo());
@@ -38,11 +38,7 @@ public class AdminProductManagerServiceImpl implements AdminProductManagerServic
         });
         return productManagerDTOS;
     }
-    private List<String> getImageUrl(Set<Image> images){
-        List<String> imageUrl= new ArrayList<>();
-        images.forEach(image -> imageUrl.add(image.getUrl()));
-        return imageUrl;
-    }
+
 
     @Override
     public Page<AdminProductManagerDTO> getAllProductByNameProductAndCatalogueAndUserNameAndStartPriceAndStatus(String name, String catalogueName, String userName, Long startPrice1,Long startPrice2, Boolean status, Pageable pageable) {
@@ -74,7 +70,7 @@ public class AdminProductManagerServiceImpl implements AdminProductManagerServic
         adminProductDetailDTO.setStartPrice(product.getStartPrice());
         adminProductDetailDTO.setMinBet(product.getMinBet());
         adminProductDetailDTO.setStartDay(product.getStartDay());
-        adminProductDetailDTO.setImg(product.getImages().toString());
+        adminProductDetailDTO.setImg(product.getImgaeURLs());
         adminProductDetailDTO.setEndDay(product.getEndDay());
         adminProductDetailDTO.setProductInfo(product.getProductInfo());
         return adminProductDetailDTO;

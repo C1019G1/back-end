@@ -1,6 +1,7 @@
 package com.codegym.dao.DTO;
 
 import java.util.Date;
+import java.util.List;
 
 public class AdminProductDetailDTO {
     private String nameProduct;
@@ -10,7 +11,7 @@ public class AdminProductDetailDTO {
     private String catalogue;
     private Long startPrice;
     private Long minBet;
-    private String img;
+    private List<String> img;
     private Date startDay;
     private Date endDay;
     private String productInfo;
@@ -75,11 +76,11 @@ public class AdminProductDetailDTO {
         this.minBet = minBet;
     }
 
-    public String getImg() {
+    public List<String> getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(List<String> img) {
         this.img = img;
     }
 
