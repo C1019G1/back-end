@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -105,6 +106,9 @@ public class AdminController {
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
         Set<Image> images = productInforDTO.getImages();
+        if ( images == null) {
+            images = new HashSet<>();
+        }
         for (String url : productInforDTO.getImgUrlList()) {
             Image image = new Image();
             image.setUrl(url);
