@@ -56,6 +56,7 @@ public class UserController {
     ProductService productService;
     @Autowired
     ImageService imageService;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         // kiểm tra username hoặc email đã tồn tại trong database?
@@ -138,11 +139,12 @@ public class UserController {
 
 
     @GetMapping("getid/{username}")
-    public ResponseEntity<?> getIdByUserName(@PathVariable("username") String username){
-        User user =userService.findByUserName(username);
+    public ResponseEntity<?> getIdByUserName(@PathVariable("username") String username) {
+        User user = userService.findByUserName(username);
         UserProfile userProfile = userProfileService.findById(user.getId());
         return new ResponseEntity<>(userProfile, HttpStatus.OK);
     }
+
     //Get info to idUserProfile
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getAllInfoUser(@PathVariable("id") Long id) {
@@ -184,7 +186,7 @@ public class UserController {
     @PutMapping("user/{userID}")
     public ResponseEntity<?> getAllHistoryRegisterProducts(@PathVariable("userID") Long userID,
                                                            @RequestBody UseProfileDTO useProfileDTO
-                                                           ) {
+    ) {
         UserProfile userProfile = new UserProfile();
         userProfile.setId(userID);
         userProfile.setFullName(useProfileDTO.getFullName());
@@ -193,14 +195,13 @@ public class UserController {
         userProfile.setIdentityNumber(useProfileDTO.getIdentityNumber());
         userProfile.setPhone(useProfileDTO.getPhone());
         userProfile.setEmail(useProfileDTO.getEmail());
-        try{
+        try {
             userProfileRepository.save(userProfile); // ssave va update nhu nhau
             return new ResponseEntity<>(null, HttpStatus.OK);
-        }catch(Exception e){
+        } catch (Exception e) {
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
-
 
 
     @PostMapping("/change-password")
@@ -229,15 +230,14 @@ public class UserController {
                 String newPassword = randomString.getAlphaNumericString(20);
                 System.out.println(newPassword);
                 user.setPassword(newPassword);
-                userService.changePassword(user.getUserName(),newPassword);
+                userService.changePassword(user.getUserName(), newPassword);
                 SendGmailService sendGmailService = new SendGmailService();
                 sendGmailService.setReceiverMail(resetPasswordDTO.getEmail());
                 sendGmailService.setTitle("Mật khẩu mới");
                 sendGmailService.setContent("mật khẩu mới của bạn là " + newPassword);
                 sendGmailService.sendMail();
                 return ResponseEntity.ok("");
-            }
-            else {
+            } else {
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body("Thông tin tài khoản không chính xác");
@@ -249,28 +249,44 @@ public class UserController {
         }
     }
 
+    //    @PostMapping("save-product")
+//    public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
+//        Set<Image> images = productInforDTO.getImages();
+//        for (String url : productInforDTO.getImgUrlList()) {
+//            Image image = new Image();
+//            image.setUrl(url);
+//            images.add(imageService.save(image));
+//        }
+//
+//        Product product = productInforDTO.toProduct();
+//        product.setImages(images);
+//        User user = userService.findByUserName(productInforDTO.getUserName());
+//        ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
+//        product.setProductCatalogue(productCatalogue);
+//        product.setUser(user);
+//        return ResponseEntity.ok(productService.save(product));
+//    }
     @PostMapping("save-product")
     public ResponseEntity saveProduct(@RequestBody ProductInforDTO productInforDTO) {
-        Set<Image> images = new HashSet<>();
+        Set<Image> images = productInforDTO.getImages();
+        if ( images == null) {
+            images = new HashSet<>();
+        }
         for (String url : productInforDTO.getImgUrlList()) {
             Image image = new Image();
             image.setUrl(url);
-            images.add(imageService.save(image));
+            image = imageService.save(image);
+            images.add(image);
         }
-        for (Image image: images) {
-            System.out.println(image.getUrl());
-        }
-
-
         Product product = productInforDTO.toProduct();
         product.setImages(images);
         User user = userService.findByUserName(productInforDTO.getUserName());
         ProductCatalogue productCatalogue = catalogueService.findByName(productInforDTO.getCatalogue());
-        product.setProductCatalogue(productCatalogue);
         product.setUser(user);
-        System.out.println("buoc 3");
+        product.setProductCatalogue(productCatalogue);
         return ResponseEntity.ok(productService.save(product));
     }
+
     @PostMapping("get-infor-user")
     public ResponseEntity getInfor(@RequestBody String userName) {
         User user = userService.findByUserName(userName);
@@ -281,39 +297,50 @@ public class UserController {
             private String email = userProfile.getEmail();
             private String userName = user.getUserName();
             private String phone = userProfile.getPhone();
+
             public String getFullName() {
                 return fullName;
             }
+
             public void setFullName(String fullName) {
                 this.fullName = fullName;
             }
+
             public String getEmail() {
                 return email;
             }
+
             public void setEmail(String email) {
                 this.email = email;
             }
+
             public Long getIdUser() {
                 return idUser;
             }
+
             public void setIdUser(Long idUser) {
                 this.idUser = idUser;
             }
+
             public String getUserName() {
                 return userName;
             }
+
             public void setUserName(String userName) {
                 this.userName = userName;
             }
+
             public String getPhone() {
                 return phone;
             }
+
             public void setPhone(String phone) {
                 this.phone = phone;
             }
         };
         return ResponseEntity.ok(object);
     }
+
     @GetMapping("get-infor-product")
     public ResponseEntity getInforProduct(@RequestParam("id") Long id) {
         System.out.println(id);
