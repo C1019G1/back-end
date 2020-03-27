@@ -346,7 +346,7 @@ public class UserController {
        SendGmailService sendGmailService =new SendGmailService();
        sendGmailService.setReceiverMail(email);
        sendGmailService.setTitle("Xác nhận thông tin thanh toán sản phầm đấu giá trên Website:daugia.com");
-       sendGmailService.setContent("Bạn đã thanh toán sản phẩm: "+productName+". Với giá thanh toán cho sản phẩm là: "+priceTotal+ " VNĐ");
+       sendGmailService.setContent("Bạn đã thanh toán sản phẩm: "+productName+". Với giá thanh toán là: "+priceTotal+ " VNĐ");
        sendGmailService.sendMail();
         return new ResponseEntity<>("Gửi mail thành công",HttpStatus.OK);
     }
