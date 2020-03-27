@@ -1,7 +1,7 @@
 package com.codegym.service;
 
-import com.codegym.dao.entity.User;
-import com.codegym.dao.entity.UserProfile;
+        import com.codegym.dao.entity.User;
+        import com.codegym.dao.entity.UserProfile;
 
 public interface UserProfileService {
    UserProfile findAllProfileUser(Long id);
